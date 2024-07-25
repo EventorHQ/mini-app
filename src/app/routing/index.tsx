@@ -10,34 +10,39 @@ import OrganizationsPage from "@/pages/organizations";
 import ProfilePage from "@/pages/profile";
 import Layout from "./Layout";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          element: <IndexPage />,
+        },
+        {
+          path: "events",
+          element: <EventsPage />,
+        },
+        {
+          path: "organizations",
+          element: <OrganizationsPage />,
+        },
+        {
+          path: "profile",
+          element: <ProfilePage />,
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <Navigate to="/" />,
+    },
+  ],
   {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <IndexPage />,
-      },
-      {
-        path: "events",
-        element: <EventsPage />,
-      },
-      {
-        path: "organizations",
-        element: <OrganizationsPage />,
-      },
-      {
-        path: "profile",
-        element: <ProfilePage />,
-      },
-    ],
-  },
-  {
-    path: "*",
-    element: <Navigate to="/" />,
-  },
-]);
+    basename: import.meta.env.BASE_URL,
+  }
+);
 
 export default function Router() {
   return <RouterProvider router={router} />;
