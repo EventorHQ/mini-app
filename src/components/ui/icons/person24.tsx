@@ -1,11 +1,13 @@
-export default function Person24Icon({ className }: { className?: string }) {
+import type { Icon } from "@/types";
+
+export default function Person24Icon(props: Icon) {
   return (
     <svg
-      className={className}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       fill="none"
+      {...props}
     >
       <path
         fill="currentcolor"

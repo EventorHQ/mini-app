@@ -1,23 +1,24 @@
-interface Props {
-  className?: string;
+import type { Icon } from "@/types";
+
+interface Props extends Icon {
   fillBody?: string;
   fillBars?: string;
   fillStar?: string;
 }
 
 export default function Logo24Icon({
-  className,
   fillBody = "#007AFF",
   fillBars = "#55A6FF",
   fillStar = "#FFFFFF",
+  ...props
 }: Props) {
   return (
     <svg
-      className={className}
       xmlns="http://www.w3.org/2000/svg"
       width="22"
       height="24"
       fill="none"
+      {...props}
     >
       <rect
         width="21.247"
