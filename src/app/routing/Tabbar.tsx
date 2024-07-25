@@ -2,7 +2,11 @@ import Building24Icon from "@/components/ui/icons/building24";
 import Logo24Icon from "@/components/ui/icons/logo24";
 import Person24Icon from "@/components/ui/icons/person24";
 import { cn, getBottomPadding } from "@/lib/utils";
-import { Button, Tabbar as TabbarView } from "@telegram-apps/telegram-ui";
+import {
+  Button,
+  FixedLayout,
+  Tabbar as TabbarView,
+} from "@telegram-apps/telegram-ui";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function getSelectedTab(pathname: string) {
@@ -29,8 +33,8 @@ export default function Tabbar() {
   };
 
   return (
-    <TabbarView>
-      <div
+    <FixedLayout className="custom-navbar">
+      <nav
         className={cn("flex w-full flex-col items-center", getBottomPadding())}
       >
         <div className="w-full flex items-center justify-center pt-4 pb-2 px-5">
@@ -73,7 +77,7 @@ export default function Tabbar() {
             <Person24Icon />
           </TabbarView.Item>
         </div>
-      </div>
-    </TabbarView>
+      </nav>
+    </FixedLayout>
   );
 }
