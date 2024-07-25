@@ -1,4 +1,3 @@
-import { HomePage } from "@/pages/home";
 import {
   bindMiniAppCSSVars,
   bindThemeParamsCSSVars,
@@ -10,7 +9,7 @@ import {
 } from "@telegram-apps/sdk-react";
 import { AppRoot } from "@telegram-apps/telegram-ui";
 import { type FC, useEffect } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Router from "./routing";
 
 export const App: FC = () => {
   const lp = useLaunchParams();
@@ -35,12 +34,7 @@ export const App: FC = () => {
       appearance={miniApp.isDark ? "dark" : "light"}
       platform={["macos", "ios"].includes(lp.platform) ? "ios" : "base"}
     >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </BrowserRouter>
+      <Router />
     </AppRoot>
   );
 };
