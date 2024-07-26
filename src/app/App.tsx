@@ -1,3 +1,4 @@
+import { TabbarProvider } from "@/store/tabbar-context";
 import {
   bindMiniAppCSSVars,
   bindThemeParamsCSSVars,
@@ -18,6 +19,7 @@ export const App: FC = () => {
   const viewport = useViewport();
 
   useEffect(() => {
+    miniApp.setHeaderColor("secondary_bg_color");
     return bindMiniAppCSSVars(miniApp, themeParams);
   }, [miniApp, themeParams]);
 
@@ -34,7 +36,9 @@ export const App: FC = () => {
       appearance={miniApp.isDark ? "dark" : "light"}
       platform={["macos", "ios"].includes(lp.platform) ? "ios" : "base"}
     >
-      <Router />
+      <TabbarProvider>
+        <Router />
+      </TabbarProvider>
     </AppRoot>
   );
 };
