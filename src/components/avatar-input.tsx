@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Avatar, Button, Subheadline } from "@telegram-apps/telegram-ui";
+import { Avatar, Button } from "@telegram-apps/telegram-ui";
 import { HTMLAttributes } from "react";
 
 export interface AvatarInputProps extends HTMLAttributes<HTMLInputElement> {}
@@ -15,7 +15,7 @@ export default function AvatarInput({
         src="https://avatars.githubusercontent.com/u/66038379?v=4"
       />
       <Button mode="plain" Component="label" className="text-tg-hint">
-        <Subheadline>Выбрать</Subheadline>
+        Выбрать
         <input type="file" className="hidden" {...restProps} />
       </Button>
     </div>
