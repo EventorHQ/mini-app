@@ -1,4 +1,5 @@
 import { TabbarProvider } from "@/store/tabbar-context";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   bindMiniAppCSSVars,
   bindThemeParamsCSSVars,
@@ -11,6 +12,8 @@ import {
 import { AppRoot } from "@telegram-apps/telegram-ui";
 import { type FC, useEffect } from "react";
 import Router from "./routing";
+
+const queryClient = new QueryClient();
 
 export const App: FC = () => {
   const lp = useLaunchParams();
@@ -32,13 +35,15 @@ export const App: FC = () => {
   }, [viewport]);
 
   return (
-    <AppRoot
-      appearance={miniApp.isDark ? "dark" : "light"}
-      platform={["macos", "ios"].includes(lp.platform) ? "ios" : "base"}
-    >
-      <TabbarProvider>
-        <Router />
-      </TabbarProvider>
-    </AppRoot>
+    <QueryClientProvider client={queryClient}>
+      <AppRoot
+        appearance={miniApp.isDark ? "dark" : "light"}
+        platform={["macos", "ios"].includes(lp.platform) ? "ios" : "base"}
+      >
+        <TabbarProvider>
+          <Router />
+        </TabbarProvider>
+      </AppRoot>
+    </QueryClientProvider>
   );
 };
