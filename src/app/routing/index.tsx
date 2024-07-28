@@ -4,8 +4,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import IndexPage from "@/pages/index-page";
+import EventPage from "@/pages/event";
 import EventsPage from "@/pages/events";
+import IndexPage from "@/pages/index-page";
 import OrganizationsPage from "@/pages/organizations";
 import ProfilePage from "@/pages/profile";
 import Layout from "./Layout";
@@ -22,7 +23,16 @@ const router = createBrowserRouter(
         },
         {
           path: "events",
-          element: <EventsPage />,
+          children: [
+            {
+              index: true,
+              element: <EventsPage />,
+            },
+            {
+              path: ":id",
+              element: <EventPage />,
+            },
+          ],
         },
         {
           path: "organizations",

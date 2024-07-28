@@ -1,6 +1,7 @@
 import type { Event } from "./types";
 
 export const dora: Event = {
+  id: "1",
   title: "Концерт Доры",
   date: "01 августа, 20:00",
   image:
