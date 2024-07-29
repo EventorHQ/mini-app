@@ -2,6 +2,7 @@ import { AddCircle28Icon } from "@/components/ui/icons/addcircle28";
 import { Channel24Icon } from "@/components/ui/icons/channel24";
 import { useTabbar } from "@/hooks/use-tabbar";
 import { dora } from "@/mockContent";
+import { useBackButton } from "@telegram-apps/sdk-react";
 import {
   Cell,
   InlineButtons,
@@ -11,18 +12,29 @@ import {
   Title,
 } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const event = dora;
 
 export default function EventPage() {
   const { id } = useParams();
   const { setIsVisible } = useTabbar();
+  const bb = useBackButton();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setIsVisible(false);
+    const handleBackButtonClick = () => {
+      navigate(-1);
+    };
 
-    return () => setIsVisible(true);
+    setIsVisible(false);
+    bb.on("click", handleBackButtonClick);
+    bb.show();
+
+    return () => {
+      setIsVisible(true);
+      bb.off("click", handleBackButtonClick);
+    };
   }, []);
 
   return (

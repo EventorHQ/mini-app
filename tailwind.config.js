@@ -1,3 +1,6 @@
+import threed from "tailwindcss-3d";
+import animate from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -37,8 +40,22 @@ export default {
           "gradient-section-bottom":
             "linear-gradient(to bottom, color-mix(in srgb, var(--tg-theme-section-bg-color) 40%, transparent), color-mix(in srgb, var(--tg-theme-section-bg-color) 90%, transparent))",
         },
-      }
+      },
+      keyframes: {
+        "collapsible-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-collapsible-content-height)" },
+        },
+        "collapsible-up": {
+          from: { height: "var(--radix-collapsible-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "collapsible-down": "collapsible-down 0.2s ease-out",
+        "collapsible-up": "collapsible-up 0.2s ease-out",
+      },
     },
   },
-  plugins: [],
+  plugins: [animate, threed],
 }
