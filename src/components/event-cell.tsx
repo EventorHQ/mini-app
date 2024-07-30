@@ -14,10 +14,10 @@ export default function EventCell({
 }: EventCellProps) {
   return (
     <Cell
-      description={date}
       before={<Image src={image} />}
       after={<Chevron16Icon />}
       {...restProps}
+      description={date}
     >
       <Text Component="h2">{title}</Text>
     </Cell>

@@ -43,6 +43,7 @@ export const App: FC = () => {
         <TabbarProvider>
           <Router />
         </TabbarProvider>
+        <div id="ticket-root"></div>
       </AppRoot>
     </QueryClientProvider>
   );

@@ -1,3 +1,4 @@
+import { Ticket } from "@/components/ticket";
 import { AddCircle28Icon } from "@/components/ui/icons/addcircle28";
 import { Channel24Icon } from "@/components/ui/icons/channel24";
 import { useTabbar } from "@/hooks/use-tabbar";
@@ -11,7 +12,7 @@ import {
   Subheadline,
   Title,
 } from "@telegram-apps/telegram-ui";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const event = dora;
@@ -22,11 +23,11 @@ export default function EventPage() {
   const bb = useBackButton();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleBackButtonClick = () => {
-      navigate(-1);
-    };
+  const handleBackButtonClick = useCallback(() => {
+    navigate(-1);
+  }, []);
 
+  useEffect(() => {
     setIsVisible(false);
     bb.on("click", handleBackButtonClick);
     bb.show();
@@ -44,22 +45,26 @@ export default function EventPage() {
         <div className="pt-5 pb-3">
           <Title weight="1">{event.title}</Title>
           <Subheadline level="2" className="text-tg-link">
-            TON Society
+            {event.organization}
           </Subheadline>
         </div>
         <InlineButtons>
-          <InlineButtons.Item text="Регистрация" mode="bezeled">
-            <AddCircle28Icon />
-          </InlineButtons.Item>
+          <Ticket event={event} backButtonHandler={handleBackButtonClick}>
+            <InlineButtons.Item text="Регистрация" mode="bezeled">
+              <AddCircle28Icon />
+            </InlineButtons.Item>
+          </Ticket>
           <InlineButtons.Item text="Поделиться" mode="gray">
             <Channel24Icon />
           </InlineButtons.Item>
         </InlineButtons>
         <Section header="О мероприятии">
+          <Cell subhead="ID">{id}</Cell>
           <Cell subhead="Дата проведения">{event.date}</Cell>
+          <Cell subhead="Место проведения">{event.location}</Cell>
+          <Cell subhead="О мероприятии">{event.description}</Cell>
         </Section>
       </List>
-      {id}
     </article>
   );
 }
