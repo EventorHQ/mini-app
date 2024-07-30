@@ -34,19 +34,18 @@ export default function Tabbar() {
 
   return (
     <FixedLayout className="">
-      <nav
-        className={cn("flex w-full flex-col items-center", getBottomPadding())}
-      >
+      <nav className="flex w-full flex-col items-center">
         <Collapsible open={params.isVisible} className="flex w-full">
           <CollapsibleContent className="flex w-full">
-            <PseudoMainButton {...params} />
+            <PseudoMainButton {...params} padding={!isVisible} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible
           open={isVisible}
           className={cn(
             "w-full surface",
-            params.isVisible ? "" : "custom-navbar"
+            params.isVisible ? "" : "custom-navbar",
+            getBottomPadding()
           )}
         >
           <CollapsibleContent className="w-full">
