@@ -45,7 +45,7 @@ export default function Tabbar() {
           className={cn(
             "w-full surface",
             params.isVisible ? "" : "custom-navbar",
-            getBottomPadding()
+            isVisible && getBottomPadding()
           )}
         >
           <CollapsibleContent className="w-full">
