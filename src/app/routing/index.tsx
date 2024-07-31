@@ -4,10 +4,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import EventPage from "@/pages/event";
-import EventsPage from "@/pages/events";
+import EventPage from "@/pages/events/event";
+import EventsPage from "@/pages/events/events";
 import IndexPage from "@/pages/index-page";
-import OrganizationsPage from "@/pages/organizations";
+import NewOrganizationPage from "@/pages/organizations/new";
+import OrganizationPage from "@/pages/organizations/organization";
+import OrganizationsPage from "@/pages/organizations/organizations";
 import ProfilePage from "@/pages/profile";
 import Layout from "./Layout";
 
@@ -36,7 +38,20 @@ const router = createBrowserRouter(
         },
         {
           path: "organizations",
-          element: <OrganizationsPage />,
+          children: [
+            {
+              index: true,
+              element: <OrganizationsPage />,
+            },
+            {
+              path: "new",
+              element: <NewOrganizationPage />,
+            },
+            {
+              path: ":id",
+              element: <OrganizationPage />,
+            },
+          ],
         },
         {
           path: "profile",

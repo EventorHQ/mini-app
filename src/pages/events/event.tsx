@@ -1,7 +1,7 @@
 import { Ticket } from "@/components/ticket";
 import { AddCircle28Icon } from "@/components/ui/icons/addcircle28";
 import { Channel24Icon } from "@/components/ui/icons/channel24";
-import { useTabbar } from "@/hooks/use-tabbar";
+import { useTabbarActions } from "@/hooks/use-tabbar-actions";
 import { dora } from "@/mockContent";
 import { useBackButton } from "@telegram-apps/sdk-react";
 import {
@@ -19,7 +19,7 @@ const event = dora;
 
 export default function EventPage() {
   const { id } = useParams();
-  const { setIsVisible } = useTabbar();
+  const { setIsVisible } = useTabbarActions();
   const bb = useBackButton();
   const navigate = useNavigate();
 

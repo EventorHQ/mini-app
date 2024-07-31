@@ -6,5 +6,6 @@ export const useTabbar = () => {
   if (!value) {
     throw new Error("useTabbar must be used within a TabbarProvider");
   }
+
   return value;
 };

@@ -6,7 +6,15 @@ import {
   useMiniApp,
 } from "@telegram-apps/sdk-react";
 import { Caption, Text, Title } from "@telegram-apps/telegram-ui";
-import { ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import QRCode from "react-qr-code";
 
@@ -88,7 +96,9 @@ export function Ticket({ event, children, backButtonHandler }: TicketProps) {
         </div>,
         document.getElementById("ticket-root") || document.body
       )}
-      <div onClick={toggleTicket}>{children}</div>
+      <div className="flex flex-1 box-border" onClick={toggleTicket}>
+        {children}
+      </div>
     </>
   );
 }
@@ -141,5 +151,57 @@ function TicketContent({ event, isOpen }: { event: Event; isOpen: boolean }) {
         </div>
       </div>
     </div>
+  );
+}
+
+export const useTicketContext = () => {
+  const value = useContext(TicketContext);
+  if (!value) {
+    throw new Error("useTicketContext must be used within a TicketProvider");
+  }
+
+  const setEvent = (event: Event | null, bbHandler?: () => void) => {
+    const { setEvent, setBbHandler } = value;
+    setEvent(event);
+    setBbHandler(bbHandler);
+  };
+
+  return {
+    event: value.event,
+    bbHandler: value.bbHandler,
+    setEvent,
+  };
+};
+
+export function TicketPortal() {
+  const { event, bbHandler } = useTicketContext();
+
+  if (!event) {
+    return null;
+  }
+
+  return <Ticket event={event} backButtonHandler={bbHandler} />;
+}
+
+type ContextValue = {
+  event: Event | null;
+  setEvent: (event: Event | null) => void;
+  bbHandler?: () => void;
+  setBbHandler: (bbHandler?: () => void) => void;
+};
+
+const TicketContext = createContext<ContextValue | null>(null);
+
+export function TicketProvider({ children }: PropsWithChildren) {
+  const [event, setEvent] = useState<Event | null>(null);
+  const [bbHandler, setBbHandler] = useState<() => void | undefined>();
+
+  const value = useMemo(
+    () => ({ event, setEvent, bbHandler, setBbHandler }),
+    [event, bbHandler]
+  );
+
+  return (
+    <TicketContext.Provider value={value}>{children}</TicketContext.Provider>
   );
 }

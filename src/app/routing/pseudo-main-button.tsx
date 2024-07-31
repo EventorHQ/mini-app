@@ -14,7 +14,12 @@ export default function PseudoMainButton(props: PseudoMainButtonProps) {
         props.padding && getBottomPadding()
       )}
     >
-      <Button size="l" className="w-full">
+      <Button
+        size="l"
+        className="w-full"
+        onClick={props.onClick}
+        disabled={props.disabled}
+      >
         {props.text}
       </Button>
     </div>

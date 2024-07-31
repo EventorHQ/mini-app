@@ -2,10 +2,13 @@ import { useQRScanner } from "@telegram-apps/sdk-react";
 import { Button } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useTabbar } from "./hooks/use-tabbar";
+import { useTabbarActions } from "./hooks/use-tabbar-actions";
 
 export default function TempAdmin() {
   const scanner = useQRScanner();
-  const { setParams, params } = useTabbar();
+  const { params } = useTabbar();
+  const { setParams } = useTabbarActions();
+
   useEffect(() => {
     return scanner.on("change", (data) => {
       if (!scanner.isOpened) {
@@ -34,7 +37,6 @@ export default function TempAdmin() {
           setParams({
             ...params,
             isVisible: !params.isVisible,
-            text: "Some text",
           })
         }
       >
