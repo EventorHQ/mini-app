@@ -5,19 +5,18 @@ import QR24Icon from "./ui/icons/qr24";
 
 export default function NearestEventBanner() {
   return (
-    <>
-      <Banner
-        type="section"
-        callout="Ближайшее мероприятие"
-        header={dora.title}
-        subheader={dora.date}
-        before={<Image src={dora.image} />}
-      ></Banner>
+    <Banner
+      type="section"
+      callout="Ближайшее мероприятие"
+      header={dora.title}
+      subheader={dora.date}
+      before={<Image src={dora.image} />}
+    >
       <Ticket event={dora}>
         <Button size="s" before={<QR24Icon />}>
           Билет
         </Button>
       </Ticket>
-    </>
+    </Banner>
   );
 }
