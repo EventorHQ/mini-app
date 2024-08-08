@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react-swc";
-// import basicSsl from '@vitejs/plugin-basic-ssl';
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,13 +14,13 @@ export default defineConfig({
     // Allows using the compilerOptions.paths property in tsconfig.json.
     // https://www.npmjs.com/package/vite-tsconfig-paths
     tsconfigPaths(),
-    // Allows using self-signed certificates to run the dev server using HTTPS.
-    // https://www.npmjs.com/package/@vitejs/plugin-basic-ssl
-    // basicSsl(),
   ],
   publicDir: "./public",
   server: {
-    // Exposes your dev server and makes it accessible for the devices in the same network.
-    host: true,
+    host: "tma.internal",
+    https: {
+      cert: readFileSync(resolve("tma.internal.pem")),
+      key: readFileSync(resolve("tma.internal-key.pem")),
+    },
   },
 });

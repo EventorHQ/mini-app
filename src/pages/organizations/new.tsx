@@ -12,12 +12,22 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+type OrganizationFormData = {
+  name: string;
+  description: string;
+  avatar: File | undefined;
+};
+
 export default function NewOrganizationPage() {
-  const [file, setFile] = useState<File | undefined>(undefined);
+  const [formData, setFormData] = useState<OrganizationFormData>({
+    name: "",
+    description: "",
+    avatar: undefined,
+  });
 
   const bb = useBackButton();
   const navigate = useNavigate();
-  const { setIsVisible } = useTabbarActions();
+  const { setIsVisible, setParams } = useTabbarActions();
 
   useEffect(() => {
     const handleClick = () => {
@@ -36,23 +46,49 @@ export default function NewOrganizationPage() {
 
   const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const file = evt.target.files?.[0];
-    setFile(file);
+    setFormData((prev) => ({ ...prev, avatar: file }));
   };
 
   const handleCancel = () => {
-    setFile(undefined);
+    setFormData((prev) => ({ ...prev, avatar: undefined }));
   };
+
+  useEffect(() => {
+    const handleSubmit = () => {
+      const fd = new FormData();
+      fd.append("title", formData.name);
+      fd.append("description", formData.description);
+      formData.avatar && fd.append("avatar_img", formData.avatar);
+
+      fetch("http://localhost:3000/orgs", {
+        method: "POST",
+        body: fd,
+      });
+    };
+
+    setParams({ onClick: handleSubmit, text: "Создать", isVisible: true });
+  }, [formData]);
 
   return (
     <List>
       <Section header="Основная информация">
-        <Input placeholder="Название" />
-        <Textarea placeholder="Описание" />
+        <Input
+          placeholder="Название"
+          onChange={(e0) =>
+            setFormData((prev) => ({ ...prev, name: e0.target.value }))
+          }
+        />
+        <Textarea
+          placeholder="Описание"
+          onChange={(e1) =>
+            setFormData((prev) => ({ ...prev, description: e1.target.value }))
+          }
+        />
       </Section>
-      {file ? (
+      {formData.avatar ? (
         <Section header="Аватар">
           <FileCell
-            file={file}
+            file={formData.avatar}
             after={<Cancel24Icon onClick={handleCancel} />}
           />
           <FileInput label="Выбрать изображение" onChange={handleInputChange} />
