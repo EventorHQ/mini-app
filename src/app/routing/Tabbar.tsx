@@ -15,6 +15,8 @@ function getSelectedTab(pathname: string) {
     return "organizations";
   } else if (pathname.includes("profile")) {
     return "profile";
+  } else if (pathname.includes("dev")) {
+    return "dev";
   }
 
   return null;
@@ -80,6 +82,13 @@ export default function Tabbar() {
                 selected={selectedTab === "profile"}
                 text="Профиль"
                 onClick={handleClick("/profile")}
+              >
+                <Person24Icon />
+              </TabbarView.Item>
+              <TabbarView.Item
+                selected={selectedTab === "dev"}
+                text="Dev"
+                onClick={handleClick("/dev")}
               >
                 <Person24Icon />
               </TabbarView.Item>

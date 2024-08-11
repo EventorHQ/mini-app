@@ -1,12 +1,11 @@
-import { BASE_URL } from "@/config/config";
 import { useQuery } from "@tanstack/react-query";
+import api from "./axios";
 
-export const useGetUsersQuery = () =>
+export const useCheckHealthQuery = () =>
   useQuery({
-    queryKey: ["users"],
+    queryKey: ["healthcheck"],
     queryFn: async () => {
-      const response = await fetch(`${BASE_URL}/users`);
-      const data = await response.json();
-      return data;
+      const response = await api.get<{ status: string }>("/healthcheck");
+      return response.data;
     },
   });

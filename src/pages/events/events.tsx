@@ -1,7 +1,6 @@
 import EventCell from "@/components/event-cell";
 import NearestEventBanner from "@/components/nearest-event-banner";
 import { dora } from "@/mockContent";
-import TempAdmin from "@/temp-admin";
 import { Event } from "@/types";
 import { useBackButton } from "@telegram-apps/sdk-react";
 import { List, Section } from "@telegram-apps/telegram-ui";
@@ -26,7 +25,6 @@ export default function EventsPage() {
       <Section header="Мои мероприятия">
         <EventCell {...dora} onClick={handleEventClick(dora)} />
       </Section>
-      <TempAdmin />
     </List>
   );
 }
