@@ -1,14 +1,134 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="theme-color" content="#000000"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
     <title>Eventor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@telegram-apps/sdk/dist/index.iife.js"></script>
+    <style>
+      :root {
+        --background: #ffffff;
+        --skeleton-main: #f1f0f8;
+        --skeleton-secondary: #dad9e1;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: #181818;
+          --skeleton-main: #323234;
+          --skeleton-secondary: #1e1e1e;
+        }
+      }
+    </style>
   </head>
   <body class="h-screen overflow-hidden">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" class="h-full overflow-y-scroll"></div>
+    <script>
+      var sdk = window.telegramApps.sdk;
+      var lp = sdk.retrieveLaunchParams();
+      document.documentElement.style.setProperty(
+        "--background",
+        lp.themeParams.secondaryBgColor
+      );
+      sdk.postEvent("web_app_ready");
+    </script>
+    <style>
+      .splash {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: var(--background);
+        z-index: 100;
+        opacity: 1;
+        will-change: transform;
+        transform: translateZ(0);
+        transition: opacity 0.3s ease-in;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .splash-fading {
+        opacity: 0;
+      }
+
+      .splash-hidden {
+        display: none;
+        opacity: 0;
+      }
+    </style>
+    <div class="splash">
+      <svg
+        width="88"
+        height="100"
+        viewBox="0 0 88 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 33.29C0 21.2216 9.75448 11.4381 21.7872 11.4381H66.2128C78.2455 11.4381 88 21.2216 88 33.29V77.8475C88 89.916 78.2455 99.6994 66.2128 99.6994H21.7872C9.75448 99.6994 0 89.916 0 77.8475V33.29Z"
+          fill="var(--skeleton-main)"
+        />
+        <path
+          d="M24.6809 4.26796C24.6809 1.91083 26.586 0 28.9362 0C31.2863 0 33.1915 1.91083 33.1915 4.26795V23.2177C33.1915 25.5748 31.2863 27.4856 28.9362 27.4856C26.586 27.4856 24.6809 25.5748 24.6809 23.2177V4.26796Z"
+          fill="var(--skeleton-secondary)"
+        />
+        <path
+          d="M39.8298 4.26796C39.8298 1.91083 41.735 0 44.0851 0C46.4353 0 48.3404 1.91083 48.3404 4.26795V23.2177C48.3404 25.5748 46.4353 27.4856 44.0851 27.4856C41.735 27.4856 39.8298 25.5748 39.8298 23.2177V4.26796Z"
+          fill="var(--skeleton-secondary)"
+        />
+        <path
+          d="M54.9787 4.26796C54.9787 1.91083 56.8839 0 59.234 0C61.5842 0 63.4894 1.91083 63.4894 4.26795V23.2177C63.4894 25.5748 61.5842 27.4856 59.234 27.4856C56.8839 27.4856 54.9787 25.5748 54.9787 23.2177V4.26796Z"
+          fill="var(--skeleton-secondary)"
+        />
+        <path
+          d="M42.6267 38.9642C43.2883 37.8617 44.882 37.8617 45.5435 38.9642L50.9408 47.9593C51.1784 48.3554 51.5661 48.6379 52.0151 48.7422L62.2125 51.1109C63.4624 51.4012 63.9548 52.9214 63.1138 53.8932L56.2522 61.8212C55.95 62.1703 55.802 62.6273 55.8418 63.0879L56.7468 73.5469C56.8578 74.8289 55.5684 75.7684 54.3871 75.2664L44.7491 71.1712C44.3247 70.9908 43.8455 70.9908 43.4211 71.1712L33.7831 75.2664C32.6018 75.7684 31.3125 74.8289 31.4234 73.5469L32.3284 63.0879C32.3683 62.6273 32.2202 62.1703 31.918 61.8212L25.0564 53.8932C24.2154 52.9214 24.7079 51.4013 25.9577 51.1109L36.1551 48.7422C36.6041 48.6379 36.9918 48.3554 37.2294 47.9593L42.6267 38.9642Z"
+          fill="var(--skeleton-secondary)"
+        />
+      </svg>
+    </div>
+    <script>
+      (function (window) {
+        window.hideLoader = function hideLoader() {
+          if (document.readyState === "loading") {
+            window.addEventListener("DOMContentLoaded", ejectLoader);
+
+            return;
+          }
+
+          ejectLoader();
+        };
+        let timeoutId = null;
+
+        window.ejectLoader = function () {
+          const splash = document.querySelector(".splash");
+
+          if (splash && !timeoutId) {
+            timeoutId = setTimeout(() => {
+              splash.classList.add("splash-fading");
+
+              setTimeout(() => {
+                splash.classList.add("splash-hidden");
+                timeoutId = null;
+              }, 200);
+            }, 300);
+          }
+        };
+
+        window.showLoader = function () {
+          const splash = document.querySelector(".splash");
+          splash.classList.remove("splash-hidden");
+          splash.classList.remove("splash-fading");
+        };
+      })(window);
+
+      window.hideLoader();
+    </script>
+
     <script src="/src/index.tsx" type="module"></script>
   </body>
 </html>
