@@ -1,4 +1,4 @@
-import { cn, getBottomPadding } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import type { PseudoMainButtonParams } from "@/store/tabbar-context";
 import { Button } from "@telegram-apps/telegram-ui";
 
@@ -10,8 +10,8 @@ export default function PseudoMainButton(props: PseudoMainButtonProps) {
   return (
     <div
       className={cn(
-        "w-full flex items-center justify-center pt-4 pb-2 px-5 custom-navbar surface",
-        props.padding && getBottomPadding()
+        "w-full flex items-center justify-center pt-4 px-5 custom-navbar surface",
+        props.padding && "pb-4"
       )}
     >
       <Button
