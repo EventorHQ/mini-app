@@ -1,4 +1,4 @@
-import { useCheckHealthQuery } from "@/api/queries";
+import { useCheckHealthQuery } from "@/api/main";
 import TempAdmin from "@/temp-admin";
 import { useBackButton } from "@telegram-apps/sdk-react";
 import { List, Section } from "@telegram-apps/telegram-ui";

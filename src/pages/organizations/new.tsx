@@ -1,3 +1,4 @@
+import { useCreateOrgMutation } from "@/api/orgs";
 import FileCell from "@/components/file-cell";
 import { Cancel24Icon } from "@/components/ui/icons/cancel24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
@@ -13,20 +14,21 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type OrganizationFormData = {
-  name: string;
+  title: string;
   description: string;
   avatar: File | undefined;
 };
 
 export default function NewOrganizationPage() {
   const [formData, setFormData] = useState<OrganizationFormData>({
-    name: "",
+    title: "",
     description: "",
     avatar: undefined,
   });
 
   const bb = useBackButton();
   const navigate = useNavigate();
+  const { mutateAsync: createOrg } = useCreateOrgMutation();
   const { setIsVisible, setParams } = useTabbarActions();
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export default function NewOrganizationPage() {
 
   const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const file = evt.target.files?.[0];
+    console.log(file);
     setFormData((prev) => ({ ...prev, avatar: file }));
   };
 
@@ -54,19 +57,15 @@ export default function NewOrganizationPage() {
   };
 
   useEffect(() => {
-    const handleSubmit = () => {
-      const fd = new FormData();
-      fd.append("title", formData.name);
-      fd.append("description", formData.description);
-      formData.avatar && fd.append("avatar_img", formData.avatar);
-
-      fetch("http://localhost:3000/orgs", {
-        method: "POST",
-        body: fd,
-      });
-    };
-
-    setParams({ onClick: handleSubmit, text: "Создать", isVisible: true });
+    setParams({
+      onClick: () => {
+        createOrg(formData).then((res) => {
+          navigate(`/organizations/${res.id}`);
+        });
+      },
+      text: "Создать",
+      isVisible: true,
+    });
   }, [formData]);
 
   return (
@@ -75,7 +74,7 @@ export default function NewOrganizationPage() {
         <Input
           placeholder="Название"
           onChange={(e0) =>
-            setFormData((prev) => ({ ...prev, name: e0.target.value }))
+            setFormData((prev) => ({ ...prev, title: e0.target.value }))
           }
         />
         <Textarea

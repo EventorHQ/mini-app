@@ -11,3 +11,10 @@ export type Event = {
   description: string;
   organization: string;
 };
+
+export type Organization = {
+  id: number;
+  title: string;
+  avatar?: string;
+  isFancy: boolean;
+};

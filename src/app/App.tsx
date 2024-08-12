@@ -13,7 +13,13 @@ import { AppRoot } from "@telegram-apps/telegram-ui";
 import { type FC, useEffect } from "react";
 import Router from "./routing";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 export const App: FC = () => {
   const lp = useLaunchParams();

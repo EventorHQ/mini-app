@@ -1,10 +1,13 @@
+import { useGetOrgsQuery } from "@/api/orgs";
+import Chevron16Icon from "@/components/ui/icons/chevron16";
 import { useTabbar } from "@/hooks/use-tabbar";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { List, Placeholder } from "@telegram-apps/telegram-ui";
+import { Cell, List, Placeholder, Section } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function OrganizationsPage() {
+  const { data, isLoading } = useGetOrgsQuery();
   const { isVisible } = useTabbar();
   const { setParams, setIsVisible } = useTabbarActions();
   const navigate = useNavigate();
@@ -15,7 +18,7 @@ export default function OrganizationsPage() {
     }
 
     setParams({
-      text: "Создать",
+      text: "Создать организацию",
       isVisible: true,
       disabled: false,
       onClick: () => {
@@ -24,11 +27,30 @@ export default function OrganizationsPage() {
     });
   }, []);
 
+  if (isLoading) {
+    return <Placeholder description="Загрузка..." />;
+  }
+
   return (
     <List>
-      <Placeholder description="Вы не принадлежите ни к одной организации">
-        {/* Пусто */}
-      </Placeholder>
+      {data && data.length > 0 ? (
+        <Section
+          header="Мои организации"
+          footer={
+            <Section.Footer centered>{data.length} организаций</Section.Footer>
+          }
+        >
+          {data.map((org) => (
+            <Cell key={org.id} after={<Chevron16Icon />}>
+              {org.title}
+            </Cell>
+          ))}
+        </Section>
+      ) : (
+        <Placeholder description="Вы не принадлежите ни к одной организации">
+          {/* Пусто */}
+        </Placeholder>
+      )}
     </List>
   );
 }
