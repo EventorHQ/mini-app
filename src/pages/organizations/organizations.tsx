@@ -1,8 +1,8 @@
 import { useGetOrgsQuery } from "@/api/orgs";
-import Chevron16Icon from "@/components/ui/icons/chevron16";
+import OrganizationCell from "@/components/organization-cell";
 import { useTabbar } from "@/hooks/use-tabbar";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { Cell, List, Placeholder, Section } from "@telegram-apps/telegram-ui";
+import { List, Placeholder, Section } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +31,10 @@ export default function OrganizationsPage() {
     return <Placeholder description="Загрузка..." />;
   }
 
+  const handleItemClick = (id: number) => () => {
+    navigate(`/organizations/${id}`);
+  };
+
   return (
     <List>
       {data && data.length > 0 ? (
@@ -40,10 +44,13 @@ export default function OrganizationsPage() {
             <Section.Footer centered>{data.length} организаций</Section.Footer>
           }
         >
-          {data.map((org) => (
-            <Cell key={org.id} after={<Chevron16Icon />}>
-              {org.title}
-            </Cell>
+          {data.map((item) => (
+            <OrganizationCell
+              key={item.organization.id}
+              organization={item.organization}
+              role={item.role}
+              onClick={handleItemClick(item.organization.id)}
+            />
           ))}
         </Section>
       ) : (

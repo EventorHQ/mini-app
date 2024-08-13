@@ -2,6 +2,15 @@ import { SVGProps } from "react";
 
 export interface Icon extends SVGProps<SVGSVGElement> {}
 
+export type User = {
+  id: number;
+  firstName: string;
+  lastName?: string;
+  username?: string;
+  avatar?: string;
+  role?: OrganizationRole;
+};
+
 export type Event = {
   id: string;
   title: string;
@@ -15,6 +24,10 @@ export type Event = {
 export type Organization = {
   id: number;
   title: string;
+  description?: string;
   avatar?: string;
   isFancy: boolean;
+  members?: User[];
 };
+
+export type OrganizationRole = "admin" | "moderator" | "member";

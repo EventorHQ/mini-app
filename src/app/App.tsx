@@ -44,7 +44,9 @@ export const App: FC = () => {
     <QueryClientProvider client={queryClient}>
       <AppRoot
         appearance={miniApp.isDark ? "dark" : "light"}
-        platform={["macos", "ios"].includes(lp.platform) ? "ios" : "base"}
+        platform={
+          ["macos", "ios", "web"].includes(lp.platform) ? "ios" : "base"
+        }
       >
         <TabbarProvider>
           <Router />

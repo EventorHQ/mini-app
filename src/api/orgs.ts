@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "./axios";
+import { Organization, OrganizationRole } from "@/types";
+import { useParams } from "react-router-dom";
 
 export const useGetOrgsQuery = () =>
   useQuery({
@@ -7,19 +9,18 @@ export const useGetOrgsQuery = () =>
     queryFn: async () => {
       const response = await api.get<
         {
-          id: number;
-          title: string;
-          avatar: string | undefined;
-          is_fancy: boolean;
+          role: OrganizationRole;
+          organization: {
+            id: number;
+            title: string;
+            description: string | undefined;
+            avatar: string;
+            isFancy: boolean;
+          };
         }[]
       >("/orgs");
 
-      return response.data.map((apiOrg) => ({
-        id: apiOrg.id,
-        title: apiOrg.title,
-        avatar: apiOrg.avatar,
-        isFancy: apiOrg.is_fancy,
-      }));
+      return response.data;
     },
   });
 
@@ -31,7 +32,6 @@ export const useCreateOrgMutation = () => {
       description: string | undefined;
       avatar: File | undefined;
     }) => {
-      console.log(data);
       const formData = new FormData();
       formData.append("title", data.title);
       data.description && formData.append("description", data.description);
@@ -44,6 +44,23 @@ export const useCreateOrgMutation = () => {
           "Content-Type": "form-data",
         },
       });
+
+      return response.data;
+    },
+  });
+};
+
+export const useGetOrganizationQuery = () => {
+  const { id } = useParams();
+
+  if (!id) {
+    throw new Error("Organization id is not defined");
+  }
+
+  return useQuery({
+    queryKey: ["get", "organization", id],
+    queryFn: async () => {
+      const response = await api.get<Organization>(`/orgs/${id}`);
 
       return response.data;
     },
