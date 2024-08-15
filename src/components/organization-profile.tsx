@@ -6,7 +6,9 @@ import {
   Cell,
   Input,
   List,
+  Modal,
   Section,
+  Tappable,
   Textarea,
   Title,
 } from "@telegram-apps/telegram-ui";
@@ -158,14 +160,22 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
                 member.id === initData?.user?.id ? (
                   <span className="text-tg-hint">Вы</span>
                 ) : (
-                  <Ellipsis24Icon className="text-tg-hint" />
+                  <Tappable>
+                    <Ellipsis24Icon className="text-tg-hint" />
+                  </Tappable>
                 )
               }
             >
               {member.firstName} {member.lastName}
             </Cell>
           ))}
-          <ButtonCell before={<PersonAdd28Icon />}>Пригласить</ButtonCell>
+          <Modal
+            trigger={
+              <ButtonCell before={<PersonAdd28Icon />}>Пригласить</ButtonCell>
+            }
+          >
+            Modal
+          </Modal>
         </Section>
       )}
     </List>
