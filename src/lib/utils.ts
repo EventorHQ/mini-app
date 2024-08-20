@@ -13,3 +13,7 @@ export function getBottomPadding() {
     ? "pb-8"
     : "pb-0";
 }
+
+export function getTelegramAvatar(username?: string) {
+  return `https://t.me/i/userpic/320/${username}.jpg`;
+}

@@ -99,3 +99,13 @@ export const useUpdateOrganizationMutation = () => {
     },
   });
 };
+
+export const useCreateInviteLinkMutation = () => {
+  return useMutation({
+    mutationFn: async (data: { orgId: number; role: OrganizationRole }) => {
+      const response = await api.post("/invitations", data);
+
+      return response.data as { id: string };
+    },
+  });
+};

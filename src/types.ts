@@ -31,3 +31,16 @@ export type Organization = {
 };
 
 export type OrganizationRole = "admin" | "moderator" | "member";
+
+export type Invitation = {
+  role: OrganizationRole;
+  inviter: {
+    first_name: string;
+    last_name: string;
+  };
+  org: {
+    title: string;
+    avatar_img: string;
+    is_fancy: boolean;
+  };
+};

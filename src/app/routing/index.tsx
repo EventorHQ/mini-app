@@ -13,6 +13,7 @@ import OrganizationsPage from "@/pages/organizations/organizations";
 import ProfilePage from "@/pages/profile";
 import Layout from "./Layout";
 import DevPage from "@/pages/dev/devpage";
+import InvitationPage from "@/pages/invitation-page";
 
 const router = createBrowserRouter(
   [
@@ -57,6 +58,10 @@ const router = createBrowserRouter(
         {
           path: "profile",
           element: <ProfilePage />,
+        },
+        {
+          path: "invitation/:invitation",
+          element: <InvitationPage />,
         },
         {
           path: "dev",

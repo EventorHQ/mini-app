@@ -2,11 +2,9 @@ import { Organization } from "@/types";
 import {
   Avatar,
   Button,
-  ButtonCell,
   Cell,
   Input,
   List,
-  Modal,
   Section,
   Tappable,
   Textarea,
@@ -16,11 +14,11 @@ import { ChangeEventHandler, FC, useState } from "react";
 import AvatarInput from "./avatar-input";
 import { getRole } from "@/lib/get-role";
 import { useInitData } from "@telegram-apps/sdk-react";
-import { PersonAdd28Icon } from "./ui/icons/person-add28";
 import { Ellipsis24Icon } from "./ui/icons/ellipsis24";
 import { cn } from "@/lib/utils";
 import Check16Icon from "./ui/icons/check16";
 import { useUpdateOrganizationMutation } from "@/api/orgs";
+import OrganizationInviteModal from "./organization-invite-modal";
 
 interface OrganizationProfileProps {
   organization: Organization;
@@ -169,13 +167,7 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
               {member.firstName} {member.lastName}
             </Cell>
           ))}
-          <Modal
-            trigger={
-              <ButtonCell before={<PersonAdd28Icon />}>Пригласить</ButtonCell>
-            }
-          >
-            Modal
-          </Modal>
+          <OrganizationInviteModal orgId={organization.id} />
         </Section>
       )}
     </List>

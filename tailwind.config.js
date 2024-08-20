@@ -3,17 +3,15 @@ import animate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         tg: {
           bg: {
-            "DEFAULT": "var(--tg-theme-bg-color, white)",
-            "second": "var(--tg-theme-secondary-bg-color, white)",
+            DEFAULT: "var(--tg-theme-bg-color, white)",
+            second: "var(--tg-theme-secondary-bg-color, white)",
+            section: "var(--tg-theme-section-bg-color, white)",
           },
           header: {
             DEFAULT: "var(--tg-theme-header-bg-color)",
@@ -58,4 +56,4 @@ export default {
     },
   },
   plugins: [animate, threed],
-}
+};
