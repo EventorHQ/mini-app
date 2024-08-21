@@ -13,6 +13,7 @@ import OrganizationsPage from "@/pages/organizations/organizations";
 import ProfilePage from "@/pages/profile";
 import Layout from "./Layout";
 import InvitationPage from "@/pages/invitation-page";
+import CreateEventPage from "@/pages/events/create-event";
 
 const router = createBrowserRouter(
   [
@@ -34,6 +35,10 @@ const router = createBrowserRouter(
             {
               path: ":id",
               element: <EventPage />,
+            },
+            {
+              path: "create",
+              element: <CreateEventPage />,
             },
           ],
         },
