@@ -1,6 +1,6 @@
-import { SDKProvider, useLaunchParams } from "@telegram-apps/sdk-react";
+import { type FC } from "react";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import { type FC, useEffect, useMemo } from "react";
+import { SDKProvider } from "@telegram-apps/sdk-react";
 
 import { App } from "@/app/App";
 import { ErrorBoundary } from "@/app/ErrorBoundary";
@@ -20,30 +20,12 @@ const ErrorBoundaryError: FC<{ error: unknown }> = ({ error }) => (
   </div>
 );
 
-const Inner: FC = () => {
-  const debug = useLaunchParams().startParam === "debug";
-  const manifestUrl = useMemo(() => {
-    return new URL("tonconnect-manifest.json", window.location.href).toString();
-  }, []);
-
-  // Enable debug mode to see all the methods sent and events received.
-  useEffect(() => {
-    if (debug) {
-      import("eruda").then((lib) => lib.default.init());
-    }
-  }, [debug]);
-
-  return (
-    <TonConnectUIProvider manifestUrl={manifestUrl}>
-      <SDKProvider acceptCustomStyles debug={debug}>
+export const Root: FC = () => (
+  <ErrorBoundary fallback={ErrorBoundaryError}>
+    <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
+      <SDKProvider acceptCustomStyles>
         <App />
       </SDKProvider>
     </TonConnectUIProvider>
-  );
-};
-
-export const Root: FC = () => (
-  <ErrorBoundary fallback={ErrorBoundaryError}>
-    <Inner />
   </ErrorBoundary>
 );

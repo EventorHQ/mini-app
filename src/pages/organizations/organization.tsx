@@ -40,7 +40,7 @@ export default function OrganizationPage() {
     return <div>Organization not found</div>;
   }
 
-  const isMember = !!organization.members;
+  const isMember = !!organization.members; // Backend won't return members unless current user is one of them
 
   if (isMember) {
     return <OrganizationProfileMember organization={organization} />;

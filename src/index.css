@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: var(--tg-theme-secondary-bg-color, red);
+  background: var(--tg-theme-secondary-bg-color, black);
   padding: 0;
   margin: 0;
 }
@@ -34,31 +34,4 @@ body {
   -webkit-line-clamp: 1;
   line-clamp: 1;
   -webkit-box-orient: vertical;
-}
-
-.splash {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: var(--background, black);
-  z-index: 100;
-  opacity: 1;
-  will-change: transform;
-  transform: translateZ(0);
-  transition: opacity 0.3s ease-in;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.splash-fading {
-  opacity: 0;
-}
-
-.splash-hidden {
-  display: none;
-  opacity: 0;
 }

@@ -81,6 +81,10 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
 
   const initData = useInitData();
 
+  const currentUser = organization.members!.find(
+    (member) => member.id === initData?.user?.id
+  )!;
+
   const toggleEditing = () => {
     setFormData({
       title: organization.title,
@@ -155,13 +159,13 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
               before={<Avatar src={member.avatar} size={48} />}
               description={getRole(member.role)}
               after={
-                member.id === initData?.user?.id ? (
+                member.id === currentUser.id ? (
                   <span className="text-tg-hint">Вы</span>
-                ) : (
+                ) : currentUser.role == "admin" ? (
                   <Tappable>
                     <Ellipsis24Icon className="text-tg-hint" />
                   </Tappable>
-                )
+                ) : null
               }
             >
               {member.firstName} {member.lastName}

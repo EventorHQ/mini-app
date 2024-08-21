@@ -68,7 +68,6 @@ export default function OrganizationInviteModal({
       .catch(console.error)
       .finally(() => {
         setIsLoading(false);
-        setOpen(false);
       });
   };
 
@@ -77,6 +76,7 @@ export default function OrganizationInviteModal({
       open={open}
       onOpenChange={setOpen}
       overlayComponent={<Modal.Overlay />}
+      className="bg-tg-bg-second"
       header={
         <Modal.Header
           after={
@@ -88,7 +88,7 @@ export default function OrganizationInviteModal({
       }
       trigger={<ButtonCell before={<PersonAdd28Icon />}>Пригласить</ButtonCell>}
     >
-      <List>
+      <List className="bg-tg-bg-second">
         <Section
           header="Уровень доступа"
           footer={
@@ -100,7 +100,7 @@ export default function OrganizationInviteModal({
           {roles.map(({ value, label }) => (
             <Cell
               key={value}
-              className="bg-tg-bg-second"
+              className="bg-tg-bg-section"
               Component="label"
               before={
                 <Selectable
