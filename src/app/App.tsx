@@ -4,6 +4,7 @@ import {
   bindMiniAppCSSVars,
   bindThemeParamsCSSVars,
   bindViewportCSSVars,
+  postEvent,
   useLaunchParams,
   useMiniApp,
   useThemeParams,
@@ -12,6 +13,7 @@ import {
 import { AppRoot } from "@telegram-apps/telegram-ui";
 import { type FC, useEffect } from "react";
 import Router from "./routing";
+import { IOS_PLATFORMS } from "@/config/config";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,9 +30,8 @@ export const App: FC = () => {
   const viewport = useViewport();
 
   useEffect(() => {
-    miniApp.setHeaderColor("secondary_bg_color");
-    return bindMiniAppCSSVars(miniApp, themeParams);
-  }, [miniApp, themeParams]);
+    postEvent("web_app_request_theme");
+  }, []);
 
   useEffect(() => {
     return bindThemeParamsCSSVars(themeParams);
@@ -40,13 +41,16 @@ export const App: FC = () => {
     return viewport && bindViewportCSSVars(viewport);
   }, [viewport]);
 
+  useEffect(() => {
+    miniApp.setHeaderColor("secondary_bg_color");
+    return bindMiniAppCSSVars(miniApp, themeParams);
+  }, [miniApp, themeParams]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppRoot
         appearance={miniApp.isDark ? "dark" : "light"}
-        platform={
-          ["macos", "ios", "web"].includes(lp.platform) ? "ios" : "base"
-        }
+        platform={IOS_PLATFORMS.includes(lp.platform) ? "ios" : "base"}
       >
         <TabbarProvider>
           <Router />
