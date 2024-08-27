@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <title>Eventor</title>
-    <script src="https://cdn.jsdelivr.net/npm/@telegram-apps/sdk/dist/index.iife.js"></script>
+  </head>
+  <body class="h-screen overflow-hidden max-w-lg mx-auto">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root" class="h-full overflow-y-scroll"></div>
     <style>
       :root {
         --background: #ffffff;
@@ -47,19 +50,6 @@
         opacity: 0;
       }
     </style>
-  </head>
-  <body class="h-screen overflow-hidden max-w-lg mx-auto">
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" class="h-full overflow-y-scroll"></div>
-    <script>
-      var sdk = window.telegramApps.sdk;
-      var lp = sdk.retrieveLaunchParams();
-      document.documentElement.style.setProperty(
-        "--background",
-        lp.themeParams.secondaryBgColor
-      );
-      sdk.postEvent("web_app_ready");
-    </script>
     <div class="splash">
       <svg
         width="88"

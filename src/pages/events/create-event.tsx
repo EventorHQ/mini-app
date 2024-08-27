@@ -1,5 +1,6 @@
 import { useCreateEventMutation } from "@/api/events";
 import { useGetOrgsQuery } from "@/api/orgs";
+import DateCell from "@/components/date-cell";
 import FileCell from "@/components/file-cell";
 import { Cancel24Icon } from "@/components/ui/icons/cancel24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
@@ -22,7 +23,7 @@ type FormData = {
   description: string;
   location: string;
   org_id: string | undefined;
-  start_date: Date;
+  start_date: Date | undefined;
   end_date: Date | undefined;
   cover: File | undefined;
 };
@@ -69,7 +70,7 @@ export default function CreateEventPage() {
           description: formData.description,
           location: formData.location,
           org_id: formData.org_id!,
-          start_date: formData.start_date,
+          start_date: formData.start_date || new Date(),
           end_date: formData.end_date,
           cover: formData.cover!,
         }).then((res) => {
@@ -101,7 +102,14 @@ export default function CreateEventPage() {
           value={formData.title}
           onChange={handleInputChange("title")}
         />
-        <Cell>Дата начала</Cell>
+        <DateCell
+          date={formData.start_date}
+          onDateChange={(date) =>
+            setFormData((formData) => ({ ...formData, start_date: date }))
+          }
+        >
+          Дата начала
+        </DateCell>
         <Cell
           after={
             <Switch
@@ -112,7 +120,17 @@ export default function CreateEventPage() {
         >
           Несколько дней
         </Cell>
-        {isMultipleDays && <Cell>Дата окончания</Cell>}
+        {isMultipleDays && (
+          <DateCell
+            date={formData.end_date}
+            fromDate={formData.start_date}
+            onDateChange={(date) =>
+              setFormData((formData) => ({ ...formData, end_date: date }))
+            }
+          >
+            Дата окончания
+          </DateCell>
+        )}
         <Textarea
           placeholder="Место проведения"
           header="Место проведения"

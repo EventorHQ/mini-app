@@ -32,14 +32,16 @@ export default {
           link: "var(--tg-theme-link-color)",
           destructive: "var(--tg-theme-destructive-text-color)",
         },
-        background: {
-          "gradient-section-top":
-            "linear-gradient(to top, color-mix(in srgb, var(--tg-theme-section-bg-color) 40%, transparent), color-mix(in srgb, var(--tg-theme-section-bg-color) 90%, transparent))",
-          "gradient-section-bottom":
-            "linear-gradient(to bottom, color-mix(in srgb, var(--tg-theme-section-bg-color) 40%, transparent), color-mix(in srgb, var(--tg-theme-section-bg-color) 90%, transparent))",
-        },
       },
       keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
         "collapsible-down": {
           from: { height: "0" },
           to: { height: "var(--radix-collapsible-content-height)" },
@@ -50,6 +52,8 @@ export default {
         },
       },
       animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
       },

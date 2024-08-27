@@ -2,36 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background: var(--tg-theme-secondary-bg-color, black);
-  padding: 0;
-  margin: 0;
-}
+@layer base {
+  body {
+    background: var(--tg-theme-secondary-bg-color, black);
+    padding: 0;
+    margin: 0;
+  }
 
-* {
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  &::-webkit-scrollbar {
-    display: none;
+  * {
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .custom-navbar {
+    display: flex;
+    justify-items: stretch;
+
+    box-shadow: 0 -1px 0 var(--tgui--divider);
+  }
+
+  .surface {
+    background: var(--tgui--surface_primary);
+  }
+
+  .clip-text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 }
 
-.custom-navbar {
-  display: flex;
-  justify-items: stretch;
+@layer components {
+  .tg-headline {
+    font-size: 19px;
+    line-height: 28px;
+  }
 
-  box-shadow: 0 -1px 0 var(--tgui--divider);
-}
-
-.surface {
-  background: var(--tgui--surface_primary);
-}
-
-.clip-text {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
+  .tg-caption2 {
+    font-size: 11px;
+    line-height: 16px;
+  }
 }

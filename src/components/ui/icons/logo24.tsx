@@ -20,36 +20,14 @@ export default function Logo24Icon({
       fill="none"
       {...props}
     >
-      <rect
-        width="21.247"
-        height="21.247"
-        y="2.754"
-        fill={fillBody}
-        opacity="0.8"
-        rx="4"
-      />
-      <rect
-        width="2.055"
-        height="6.616"
-        x="5.959"
-        fill={fillBars}
-        opacity="0.8"
-        rx="1.027"
-      />
-      <rect
-        width="2.055"
-        height="6.616"
-        x="9.616"
-        fill={fillBars}
-        opacity="0.8"
-        rx="1.027"
-      />
+      <rect width="21.247" height="21.247" y="2.754" fill={fillBody} rx="4" />
+      <rect width="2.055" height="6.616" x="5.959" fill={fillBars} rx="1.027" />
+      <rect width="2.055" height="6.616" x="9.616" fill={fillBars} rx="1.027" />
       <rect
         width="2.055"
         height="6.616"
         x="13.274"
         fill={fillBars}
-        opacity="0.8"
         rx="1.027"
       />
       <path
