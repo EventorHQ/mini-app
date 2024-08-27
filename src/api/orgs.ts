@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "./axios";
 import { Organization, OrganizationRole } from "@/types";
-import { useParams } from "react-router-dom";
 
 export const useGetOrgsQuery = () =>
   useQuery({
@@ -50,13 +49,7 @@ export const useCreateOrgMutation = () => {
   });
 };
 
-export const useGetOrganizationQuery = () => {
-  const { id } = useParams();
-
-  if (!id) {
-    throw new Error("Organization id is not defined");
-  }
-
+export const useGetOrganizationQuery = (id: number) => {
   return useQuery({
     queryKey: ["get", "organization", +id],
     queryFn: async () => {

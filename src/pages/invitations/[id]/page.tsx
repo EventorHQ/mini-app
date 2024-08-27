@@ -1,8 +1,10 @@
+import type { FC } from "react";
 import {
   useAcceptInvitationMutation,
   useGetInvitationQuery,
 } from "@/api/invitations";
 import Check16Icon from "@/components/ui/icons/check16";
+import { useNavigate } from "@/hooks/use-navigate";
 import { getTelegramAvatar } from "@/lib/utils";
 import { useInitData } from "@telegram-apps/sdk-react";
 import {
@@ -11,8 +13,7 @@ import {
   Button,
   Placeholder,
 } from "@telegram-apps/telegram-ui";
-import { FC } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Redirect, useParams } from "wouter";
 
 const Invitation: FC<{ invitation: string }> = ({ invitation }) => {
   const { data, isLoading } = useGetInvitationQuery(invitation);
@@ -73,11 +74,11 @@ const Invitation: FC<{ invitation: string }> = ({ invitation }) => {
 };
 
 export default function InvitationPage() {
-  const { invitation } = useParams();
+  const { id } = useParams<{ id: string }>();
 
-  if (invitation) {
-    return <Invitation invitation={invitation} />;
+  if (id) {
+    return <Invitation invitation={id} />;
   }
 
-  return <Navigate to="/events" />;
+  return <Redirect to="/" />;
 }

@@ -4,7 +4,7 @@ import { useTabbar } from "@/hooks/use-tabbar";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
 import { List, Placeholder, Section } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/hooks/use-navigate";
 
 export default function OrganizationsPage() {
   const { data, isLoading } = useGetOrgsQuery();
@@ -22,7 +22,7 @@ export default function OrganizationsPage() {
       isVisible: true,
       disabled: false,
       onClick: () => {
-        navigate("/organizations/new");
+        navigate("/orgs/create");
       },
     });
   }, []);
@@ -32,7 +32,7 @@ export default function OrganizationsPage() {
   }
 
   const handleItemClick = (id: number) => () => {
-    navigate(`/organizations/${id}`);
+    navigate(`/orgs/${id}`);
   };
 
   return (

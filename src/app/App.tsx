@@ -12,7 +12,7 @@ import {
 } from "@telegram-apps/sdk-react";
 import { AppRoot } from "@telegram-apps/telegram-ui";
 import { type FC, useEffect } from "react";
-import Router from "./routing";
+import Router from "./routing/router";
 import { IOS_PLATFORMS } from "@/config/config";
 
 const queryClient = new QueryClient({

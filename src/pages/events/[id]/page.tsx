@@ -2,7 +2,6 @@ import { Ticket } from "@/components/ticket";
 import { AddCircle28Icon } from "@/components/ui/icons/addcircle28";
 import { Channel24Icon } from "@/components/ui/icons/channel24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { dora } from "@/mockContent";
 import { useBackButton } from "@telegram-apps/sdk-react";
 import {
   Cell,
@@ -13,18 +12,19 @@ import {
   Title,
 } from "@telegram-apps/telegram-ui";
 import { useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "@/hooks/use-navigate";
+import { useParams } from "wouter";
 
-const event = dora;
+const event = {};
 
 export default function EventPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { setIsVisible } = useTabbarActions();
   const bb = useBackButton();
   const navigate = useNavigate();
 
   const handleBackButtonClick = useCallback(() => {
-    navigate(-1);
+    navigate("/");
   }, []);
 
   useEffect(() => {

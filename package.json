@@ -25,10 +25,10 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.15",
-    "react-router-dom": "^6.23.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-3d": "^1.0.6",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "wouter": "^3.3.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",

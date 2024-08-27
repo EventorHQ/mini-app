@@ -1,7 +1,7 @@
 import { useCreateUserMutation } from "@/api/users";
 import { useStartApp } from "@/hooks/use-startapp";
 import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Redirect } from "wouter";
 
 export default function IndexPage() {
   const { mutateAsync: login } = useCreateUserMutation();
@@ -12,5 +12,5 @@ export default function IndexPage() {
 
   useStartApp();
 
-  return <Navigate to="/events" />;
+  return <Redirect to="/" />;
 }

@@ -6,17 +6,19 @@ import {
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
 import { useBackButton } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/hooks/use-navigate";
+import { useParams } from "wouter";
 
 export default function OrganizationPage() {
-  const { data: organization, isLoading } = useGetOrganizationQuery();
+  const { id } = useParams<{ id: string }>();
+  const { data: organization, isLoading } = useGetOrganizationQuery(+id);
   const bb = useBackButton();
   const navigate = useNavigate();
   const { setParams } = useTabbarActions();
 
   useEffect(() => {
     const handleClick = () => {
-      navigate(-1);
+      navigate("/orgs");
     };
 
     setParams({

@@ -11,7 +11,7 @@ import {
   Textarea,
 } from "@telegram-apps/telegram-ui";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/hooks/use-navigate";
 
 type OrganizationFormData = {
   title: string;
@@ -33,7 +33,7 @@ export default function NewOrganizationPage() {
 
   useEffect(() => {
     const handleClick = () => {
-      navigate(-1);
+      navigate("/orgs");
     };
 
     !bb.isVisible && bb.show();
@@ -60,7 +60,7 @@ export default function NewOrganizationPage() {
     setParams({
       onClick: () => {
         createOrg(formData).then((res) => {
-          navigate(`/organizations/${res.id}`, { replace: true });
+          navigate(`/organizations/${res.id}`);
         });
       },
       text: "Создать",

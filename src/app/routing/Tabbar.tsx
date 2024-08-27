@@ -5,14 +5,15 @@ import Person24Icon from "@/components/ui/icons/person24";
 import { useTabbar } from "@/hooks/use-tabbar";
 import { cn, getBottomPadding } from "@/lib/utils";
 import { FixedLayout, Tabbar as TabbarView } from "@telegram-apps/telegram-ui";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 import PseudoMainButton from "./pseudo-main-button";
+import { useNavigate } from "@/hooks/use-navigate";
 
 function getSelectedTab(pathname: string) {
-  if (pathname.includes("events")) {
+  if (pathname === "/") {
     return "events";
-  } else if (pathname.includes("organizations")) {
-    return "organizations";
+  } else if (pathname.includes("orgs")) {
+    return "orgs";
   } else if (pathname.includes("profile")) {
     return "profile";
   }
@@ -21,7 +22,7 @@ function getSelectedTab(pathname: string) {
 }
 
 export default function Tabbar() {
-  const { pathname } = useLocation();
+  const [pathname] = useLocation();
   const selectedTab = getSelectedTab(pathname);
   const navigate = useNavigate();
   const { isVisible, params } = useTabbar();
@@ -53,7 +54,7 @@ export default function Tabbar() {
               <TabbarView.Item
                 selected={selectedTab === "events"}
                 text="Мероприятия"
-                onClick={handleClick("/events")}
+                onClick={handleClick("/")}
               >
                 <Logo24Icon
                   fillBody={
@@ -70,9 +71,9 @@ export default function Tabbar() {
                 />
               </TabbarView.Item>
               <TabbarView.Item
-                selected={selectedTab === "organizations"}
+                selected={selectedTab === "orgs"}
                 text="Организации"
-                onClick={handleClick("/organizations")}
+                onClick={handleClick("/orgs")}
               >
                 <Building24Icon />
               </TabbarView.Item>

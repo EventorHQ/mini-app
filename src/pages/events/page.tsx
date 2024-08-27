@@ -13,7 +13,7 @@ import {
   Button,
 } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/hooks/use-navigate";
 
 export default function EventsPage() {
   const { data: orgs, isLoading: isOrgsLoading } = useGetOrgsQuery();

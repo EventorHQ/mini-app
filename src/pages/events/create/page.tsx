@@ -16,7 +16,7 @@ import {
   Textarea,
 } from "@telegram-apps/telegram-ui";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/hooks/use-navigate";
 
 type FormData = {
   title: string;
@@ -82,7 +82,7 @@ export default function CreateEventPage() {
 
   useEffect(() => {
     const handleBackButtonClick = () => {
-      navigate(-1);
+      navigate("/");
     };
 
     bb.on("click", handleBackButtonClick);

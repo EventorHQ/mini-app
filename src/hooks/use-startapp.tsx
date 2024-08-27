@@ -1,6 +1,6 @@
 import { useInitData } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "./use-navigate";
 
 export const useStartApp = () => {
   const initData = useInitData();
