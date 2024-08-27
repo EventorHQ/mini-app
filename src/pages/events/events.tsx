@@ -1,22 +1,29 @@
+import { ReadEvent, useGetEventsQuery } from "@/api/events";
 import { useGetOrgsQuery } from "@/api/orgs";
+import { DateString } from "@/components/date";
 import EventCell from "@/components/event-cell";
-import NearestEventBanner from "@/components/nearest-event-banner";
+import QR24Icon from "@/components/ui/icons/qr24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { dora } from "@/mockContent";
-import { Event } from "@/types";
 import { useBackButton } from "@telegram-apps/sdk-react";
-import { List, Section } from "@telegram-apps/telegram-ui";
+import {
+  Banner,
+  List,
+  Section,
+  Image,
+  Button,
+} from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function EventsPage() {
   const { data: orgs, isLoading: isOrgsLoading } = useGetOrgsQuery();
+  const { data: events, isLoading: isEventsLoading } = useGetEventsQuery();
   const navigate = useNavigate();
   const bb = useBackButton();
   const { setParams, setIsVisible } = useTabbarActions();
 
-  const handleEventClick = (event: Event) => () => {
-    navigate(`/events/${event.id}`);
+  const handleEventClick = (event: ReadEvent) => () => {
+    navigate(`/events/${event.event_id}`);
   };
 
   useEffect(() => {
@@ -36,12 +43,36 @@ export default function EventsPage() {
     }
   }, [orgs, isOrgsLoading]);
 
+  if (isEventsLoading || !events) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <List>
-      <NearestEventBanner />
-      <Section header="Мои мероприятия">
-        <EventCell {...dora} onClick={handleEventClick(dora)} />
-      </Section>
+      <Banner
+        type="section"
+        callout="Ближайшее мероприятие"
+        header={events[0].title}
+        subheader={<DateString date={events[0].start_date} />}
+        before={<Image src={events[0].cover_img} />}
+      >
+        <Button size="s" before={<QR24Icon />}>
+          Билет
+        </Button>
+      </Banner>
+      {events.length > 0 ? (
+        <Section header="Мои мероприятия">
+          {events.map((event) => (
+            <EventCell
+              key={event.event_id}
+              event={event}
+              onClick={handleEventClick(event)}
+            />
+          ))}
+        </Section>
+      ) : (
+        <Section.Footer centered>Нет мероприятий</Section.Footer>
+      )}
     </List>
   );
 }

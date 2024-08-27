@@ -1,5 +1,5 @@
 import api from "./axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 type CreateEventData = {
   title: string;
@@ -10,6 +10,19 @@ type CreateEventData = {
   start_date: Date;
   end_date: Date | undefined;
   form?: unknown;
+};
+
+export type ReadEvent = {
+  event_id: number;
+  creator_id: number;
+  title: string;
+  description: string;
+  cover_img: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  role: string;
 };
 
 export const useCreateEventMutation = () => {
@@ -33,6 +46,16 @@ export const useCreateEventMutation = () => {
         },
       });
 
+      return response.data;
+    },
+  });
+};
+
+export const useGetEventsQuery = () => {
+  return useQuery({
+    queryKey: ["events"],
+    queryFn: async () => {
+      const response = await api.get<ReadEvent[]>("/events");
       return response.data;
     },
   });
