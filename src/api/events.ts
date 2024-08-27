@@ -1,5 +1,5 @@
 import api from "./axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type CreateEventData = {
   title: string;
@@ -25,8 +25,31 @@ export type ReadEvent = {
   role: string;
 };
 
+export type DetailedEvent = {
+  id: number;
+  title: string;
+  description: string;
+  cover_img: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  role: string;
+  org: {
+    id: number;
+    title: string;
+    is_fancy: boolean;
+  };
+};
+
 export const useCreateEventMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["events"],
+      });
+    },
     mutationFn: async (data: CreateEventData) => {
       const formData = new FormData();
       formData.append("title", data.title);
@@ -56,6 +79,16 @@ export const useGetEventsQuery = () => {
     queryKey: ["events"],
     queryFn: async () => {
       const response = await api.get<ReadEvent[]>("/events");
+      return response.data;
+    },
+  });
+};
+
+export const useGetEventQuery = (id: number) => {
+  return useQuery({
+    queryKey: ["event", id],
+    queryFn: async () => {
+      const response = await api.get<DetailedEvent>(`/events/${id}`);
       return response.data;
     },
   });
