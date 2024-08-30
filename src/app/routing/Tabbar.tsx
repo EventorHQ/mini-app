@@ -27,8 +27,6 @@ export default function Tabbar() {
   const navigate = useNavigate();
   const { isVisible, params } = useTabbar();
 
-  if (!selectedTab) return null;
-
   const handleClick = (path: string) => () => {
     navigate(path);
   };

@@ -23,7 +23,7 @@ const ErrorBoundaryError: FC<{ error: unknown }> = ({ error }) => (
 export const Root: FC = () => (
   <ErrorBoundary fallback={ErrorBoundaryError}>
     <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
-      <SDKProvider acceptCustomStyles debug={import.meta.env.DEV}>
+      <SDKProvider acceptCustomStyles debug={false}>
         <App />
       </SDKProvider>
     </TonConnectUIProvider>

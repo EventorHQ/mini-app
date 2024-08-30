@@ -18,7 +18,11 @@ export default function OrganizationPage() {
 
   useEffect(() => {
     const handleClick = () => {
-      navigate("/orgs");
+      if (history.state && "from" in history.state) {
+        navigate(history.state.from);
+      } else {
+        navigate("/orgs");
+      }
     };
 
     setParams({
