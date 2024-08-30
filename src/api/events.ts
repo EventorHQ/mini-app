@@ -34,7 +34,7 @@ export type DetailedEvent = {
   start_date: string;
   end_date: string;
   created_at: string;
-  role: string;
+  role: "creator" | "visitor" | "seeker";
   org: {
     id: number;
     title: string;
@@ -93,3 +93,23 @@ export const useGetEventQuery = (id: number) => {
     },
   });
 };
+
+export const useGetEventAdministrationQuery = (id: number) => {
+  return useQuery({
+    queryKey: ["event", "administration", id],
+    queryFn: async () => {
+      const response = await api.get<DetailedEvent>(
+        `/events/${id}/administration`
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useDeleteEventMutation = (id: number) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await api.delete(`/events/${id}`);
+      return response.data;
+    },
+  });

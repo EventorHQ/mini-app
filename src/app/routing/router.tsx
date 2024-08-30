@@ -5,6 +5,10 @@ import Tabbar from "./Tabbar";
 
 const EventsPage = lazy(() => import("@/pages/events/page"));
 const EventPage = lazy(() => import("@/pages/events/[id]/page"));
+const EventDetailsPage = lazy(() => import("@/pages/events/[id]/details/page"));
+const EventRegisterPage = lazy(
+  () => import("@/pages/events/[id]/register/page")
+);
 const CreateEventPage = lazy(() => import("@/pages/events/create/page"));
 
 const OrgsPage = lazy(() => import("@/pages/orgs/page"));
@@ -32,6 +36,16 @@ export default function AppRouter() {
           <Route path="/events/:id">
             <Suspense fallback={<div>Loading page...</div>}>
               <EventPage />
+            </Suspense>
+          </Route>
+          <Route path="/events/:id/details">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EventDetailsPage />
+            </Suspense>
+          </Route>
+          <Route path="/events/:id/register">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EventRegisterPage />
             </Suspense>
           </Route>
         </Switch>

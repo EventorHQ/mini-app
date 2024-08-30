@@ -1,0 +1,158 @@
+import {
+  DetailedEvent,
+  useDeleteEventMutation,
+  useGetEventAdministrationQuery,
+} from "@/api/events";
+import Chevron16Icon from "@/components/ui/icons/chevron16";
+import { Edit28Icon } from "@/components/ui/icons/edit28";
+import { useNavigate } from "@/hooks/use-navigate";
+import { useTabbarActions } from "@/hooks/use-tabbar-actions";
+import {
+  useBackButton,
+  usePopup,
+  useQRScanner,
+} from "@telegram-apps/sdk-react";
+import {
+  ButtonCell,
+  Cell,
+  List,
+  Section,
+  Text,
+} from "@telegram-apps/telegram-ui";
+import { FC, useEffect } from "react";
+import { useParams } from "wouter";
+import { isBefore } from "date-fns";
+
+const EditButtons: FC<{ event: DetailedEvent }> = ({ event }) => {
+  const { mutate: deleteEvent } = useDeleteEventMutation(event.id);
+  const navigate = useNavigate();
+
+  if (isBefore(new Date(event.start_date), new Date())) {
+    return null;
+  }
+
+  const handleEditClick = () => {
+    navigate(`/events/${event.id}/edit`);
+  };
+
+  const handleDeleteClick = () => {
+    deleteEvent(undefined, {
+      onSuccess: () => {
+        navigate(`/events`);
+      },
+    });
+  };
+
+  return (
+    <Section>
+      <ButtonCell before={<Edit28Icon />} onClick={handleEditClick}>
+        Редактировать
+      </ButtonCell>
+      <ButtonCell mode="destructive" onClick={handleDeleteClick}>
+        Отменить
+      </ButtonCell>
+    </Section>
+  );
+};
+
+export default function EventDetailsPage() {
+  const { setParams, setIsVisible } = useTabbarActions();
+  const scanner = useQRScanner();
+  const popup = usePopup();
+  const navigate = useNavigate();
+  const params = useParams<{ id: string }>();
+  const bb = useBackButton();
+  const { data, isLoading } = useGetEventAdministrationQuery(+params.id);
+
+  useEffect(() => {
+    const handleClick = () => {
+      navigate(`/events/${params.id}`);
+    };
+
+    bb.show();
+    bb.on("click", handleClick);
+    return () => {
+      bb.off("click", handleClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClick = () => {
+      if (scanner.supports("open")) {
+        scanner
+          .open({
+            text: "Просканируйте QR-код на билете участника",
+          })
+          .then((content) => {
+            alert(content);
+          });
+      } else if (popup.supports("open")) {
+        popup.open({
+          title: "Ошибка",
+          message: "Ваша версия клиента не поддерживает сканер QR-кодов",
+        });
+      } else {
+        alert("Ваша версия клиента не поддерживает сканер QR-кодов");
+      }
+    };
+
+    setIsVisible(false);
+
+    setParams({
+      isVisible: true,
+      text: "Сканировать QR",
+      onClick: handleClick,
+    });
+  }, [scanner, popup]);
+
+  const handlePeopleCellClick = (type: string) => () => {
+    navigate(`/events/${params.id}/people/${type}`);
+  };
+
+  if (!data || isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <List>
+      <Section header="Участники">
+        <Cell
+          onClick={handlePeopleCellClick("checkin")}
+          after={
+            <div className="flex items-center justify-center gap-2">
+              <Text className="text-tg-hint">0</Text>
+              <Chevron16Icon />
+            </div>
+          }
+        >
+          Прошли Check-in
+        </Cell>
+        <Cell
+          onClick={handlePeopleCellClick("visitors")}
+          after={
+            <div className="flex items-center justify-center gap-2">
+              <Text className="text-tg-hint">100</Text>
+              <Chevron16Icon />
+            </div>
+          }
+        >
+          Зарегистрировались
+        </Cell>
+      </Section>
+      <Section>
+        <Cell
+          onClick={handlePeopleCellClick("feedback")}
+          after={
+            <div className="flex items-center justify-center gap-2">
+              <Text className="text-tg-hint">0</Text>
+              <Chevron16Icon />
+            </div>
+          }
+        >
+          Отзывы
+        </Cell>
+      </Section>
+      <EditButtons event={data} />
+    </List>
+  );
+}

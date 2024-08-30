@@ -1,10 +1,7 @@
-import { AddCircle28Icon } from "@/components/ui/icons/addcircle28";
-import { Channel24Icon } from "@/components/ui/icons/channel24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { useBackButton, useUtils } from "@telegram-apps/sdk-react";
+import { useBackButton } from "@telegram-apps/sdk-react";
 import {
   Cell,
-  InlineButtons,
   List,
   Section,
   Subheadline,
@@ -14,9 +11,9 @@ import { useCallback, useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
 import { useParams } from "wouter";
 import { useGetEventQuery } from "@/api/events";
-import { APP_URL } from "@/config/config";
 import { useDateFormat } from "@/hooks/use-date-format";
 import Check16Icon from "@/components/ui/icons/check16";
+import EventButtons from "@/components/event-buttons";
 
 export default function EventPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,16 +21,11 @@ export default function EventPage() {
   const bb = useBackButton();
   const navigate = useNavigate();
   const { data: event, isLoading } = useGetEventQuery(+id);
-  const utils = useUtils();
   const format = useDateFormat({
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-
-  const handleShareClick = () => {
-    utils.shareURL(`${APP_URL}?startapp=${event?.id}`, event?.title);
-  };
 
   const handleBackButtonClick = useCallback(() => {
     navigate("/");
@@ -78,23 +70,10 @@ export default function EventPage() {
             onClick={handleOrganizationClick}
           >
             {event.org.title}
-            {!event.org.is_fancy && <Check16Icon />}
+            {event.org.is_fancy && <Check16Icon />}
           </Subheadline>
         </div>
-        <InlineButtons>
-          {/* <Ticket event={event} backButtonHandler={handleBackButtonClick}> */}
-          <InlineButtons.Item text="Регистрация" mode="bezeled">
-            <AddCircle28Icon />
-          </InlineButtons.Item>
-          {/* </Ticket> */}
-          <InlineButtons.Item
-            text="Поделиться"
-            mode="gray"
-            onClick={handleShareClick}
-          >
-            <Channel24Icon />
-          </InlineButtons.Item>
-        </InlineButtons>
+        <EventButtons event={event} />
         <Section header="О мероприятии">
           {event.start_date === event.end_date ? (
             <Cell subhead="Дата проведения">
