@@ -131,8 +131,10 @@ export const useDeleteEventMutation = (id: number) =>
     },
   });
 
-export const useCheckinMutation = (id: number) =>
-  useMutation({
+export const useCheckinMutation = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: async (initDataRaw: string) => {
       const response = await api.post(`/events/${id}/checkin`, {
         user: initDataRaw,
@@ -140,7 +142,13 @@ export const useCheckinMutation = (id: number) =>
 
       return response.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["event", "administration", id],
+      });
+    },
   });
+};
 
 export const useRegisterMutation = (id: number) =>
   useMutation({

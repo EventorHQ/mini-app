@@ -90,7 +90,7 @@ export default function EventDetailsPage() {
               return;
             }
 
-            mutateAsync(initDataRaw).then((res) => alert(res));
+            mutateAsync(initDataRaw).then((res) => alert(JSON.stringify(res)));
           });
       } else if (popup.supports("open")) {
         popup.open({
