@@ -11,6 +11,7 @@ import {
   Section,
   Image,
   Button,
+  Placeholder,
 } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
@@ -45,6 +46,14 @@ export default function EventsPage() {
 
   if (isEventsLoading || !events) {
     return <div>Loading...</div>;
+  }
+
+  if (events.length === 0) {
+    return (
+      <List>
+        <Placeholder description="Нет мероприятий"></Placeholder>
+      </List>
+    );
   }
 
   return (
