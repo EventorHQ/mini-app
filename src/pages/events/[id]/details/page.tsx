@@ -1,5 +1,6 @@
 import {
-  DetailedEvent,
+  EventAdministration,
+  useCheckinMutation,
   useDeleteEventMutation,
   useGetEventAdministrationQuery,
 } from "@/api/events";
@@ -23,7 +24,7 @@ import { FC, useEffect } from "react";
 import { useParams } from "wouter";
 import { isBefore } from "date-fns";
 
-const EditButtons: FC<{ event: DetailedEvent }> = ({ event }) => {
+const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
   const { mutate: deleteEvent } = useDeleteEventMutation(event.id);
   const navigate = useNavigate();
 
@@ -63,6 +64,7 @@ export default function EventDetailsPage() {
   const params = useParams<{ id: string }>();
   const bb = useBackButton();
   const { data, isLoading } = useGetEventAdministrationQuery(+params.id);
+  const { mutateAsync } = useCheckinMutation(+params.id);
 
   useEffect(() => {
     const handleClick = () => {
@@ -83,8 +85,12 @@ export default function EventDetailsPage() {
           .open({
             text: "Просканируйте QR-код на билете участника",
           })
-          .then((content) => {
-            alert(content);
+          .then((initDataRaw) => {
+            if (!initDataRaw) {
+              return;
+            }
+
+            mutateAsync(initDataRaw).then((res) => alert(res));
           });
       } else if (popup.supports("open")) {
         popup.open({
@@ -105,9 +111,10 @@ export default function EventDetailsPage() {
     });
   }, [scanner, popup]);
 
-  const handlePeopleCellClick = (type: string) => () => {
-    navigate(`/events/${params.id}/people/${type}`);
-  };
+  const handlePeopleCellClick =
+    (type: "feedback" | "checkin" | "visitors") => () => {
+      navigate(`/events/${params.id}/people/${type}`);
+    };
 
   if (!data || isLoading) {
     return <div>Loading...</div>;
@@ -120,7 +127,9 @@ export default function EventDetailsPage() {
           onClick={handlePeopleCellClick("checkin")}
           after={
             <div className="flex items-center justify-center gap-2">
-              <Text className="text-tg-hint">0</Text>
+              <Text className="text-tg-hint">
+                {data.total_checked_in_visitors}
+              </Text>
               <Chevron16Icon />
             </div>
           }
@@ -131,7 +140,7 @@ export default function EventDetailsPage() {
           onClick={handlePeopleCellClick("visitors")}
           after={
             <div className="flex items-center justify-center gap-2">
-              <Text className="text-tg-hint">100</Text>
+              <Text className="text-tg-hint">{data.total_visitors}</Text>
               <Chevron16Icon />
             </div>
           }

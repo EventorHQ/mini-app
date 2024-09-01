@@ -42,6 +42,23 @@ export type DetailedEvent = {
   };
 };
 
+type Visitor = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  username: string | undefined;
+  photo_img: string | undefined;
+};
+
+export type EventAdministration = {
+  id: number;
+  start_date: string;
+  total_visitors: number;
+  total_checked_in_visitors: number;
+  all_visitors: Visitor[];
+  checked_in_visitors: Visitor[];
+};
+
 export const useCreateEventMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -98,8 +115,8 @@ export const useGetEventAdministrationQuery = (id: number) => {
   return useQuery({
     queryKey: ["event", "administration", id],
     queryFn: async () => {
-      const response = await api.get<DetailedEvent>(
-        `/events/${id}/administration`
+      const response = await api.get<EventAdministration>(
+        `/events/${id}/administration`,
       );
       return response.data;
     },
@@ -110,6 +127,17 @@ export const useDeleteEventMutation = (id: number) =>
   useMutation({
     mutationFn: async () => {
       const response = await api.delete(`/events/${id}`);
+      return response.data;
+    },
+  });
+
+export const useCheckinMutation = (id: number) =>
+  useMutation({
+    mutationFn: async (initDataRaw: string) => {
+      const response = await api.post(`/events/${id}/checkin`, {
+        user: initDataRaw,
+      });
+
       return response.data;
     },
   });

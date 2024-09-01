@@ -7,7 +7,16 @@ const EventsPage = lazy(() => import("@/pages/events/page"));
 const EventPage = lazy(() => import("@/pages/events/[id]/page"));
 const EventDetailsPage = lazy(() => import("@/pages/events/[id]/details/page"));
 const EventRegisterPage = lazy(
-  () => import("@/pages/events/[id]/register/page")
+  () => import("@/pages/events/[id]/register/page"),
+);
+const EventCheckedInPage = lazy(
+  () => import("@/pages/events/[id]/people/checkin/page"),
+);
+const EventVisitorsPage = lazy(
+  () => import("@/pages/events/[id]/people/visitors/page"),
+);
+const EventFeedbackPage = lazy(
+  () => import("@/pages/events/[id]/people/feedback/page"),
 );
 const CreateEventPage = lazy(() => import("@/pages/events/create/page"));
 
@@ -46,6 +55,21 @@ export default function AppRouter() {
           <Route path="/events/:id/register">
             <Suspense fallback={<div>Loading page...</div>}>
               <EventRegisterPage />
+            </Suspense>
+          </Route>
+          <Route path="/events/:id/people/checkin">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EventCheckedInPage />
+            </Suspense>
+          </Route>
+          <Route path="/events/:id/people/visitors">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EventVisitorsPage />
+            </Suspense>
+          </Route>
+          <Route path="/events/:id/people/feedback">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EventFeedbackPage />
             </Suspense>
           </Route>
         </Switch>
