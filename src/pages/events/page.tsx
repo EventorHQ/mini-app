@@ -49,9 +49,20 @@ export default function EventsPage() {
   }
 
   if (events.length === 0) {
+    if (!isOrgsLoading && orgs && orgs.length > 0) {
+      <List>
+        <Placeholder
+          header="Тут пусто"
+          description="У Вас пока нет мероприятий, на которые вы зарегистрировались или создали. Давайте это исправим?"
+        ></Placeholder>
+      </List>;
+    }
     return (
       <List>
-        <Placeholder description="Нет мероприятий"></Placeholder>
+        <Placeholder
+          header="Тут пусто"
+          description="У Вас пока нет мероприятий, на которые вы зарегистрировались"
+        ></Placeholder>
       </List>
     );
   }

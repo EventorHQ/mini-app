@@ -24,13 +24,14 @@ const ActionButton: FC<EventButtonsProps> = ({ event }) => {
 
     return (
       <InlineButtons.Item text="Билет" mode="gray" onClick={handleClick}>
-        <AddCircle28Icon />
+        <QR24Icon />
       </InlineButtons.Item>
     );
   }
   const handleClick = () => {
     navigate(
-      `/events/${event.id}/${event.role === "seeker" ? "register" : "details"}`
+      `/events/${event.id}/${event.role === "seeker" ? "register" : "details"}`,
+      { state: { event: event } },
     );
   };
 
@@ -40,7 +41,7 @@ const ActionButton: FC<EventButtonsProps> = ({ event }) => {
       mode={event.role === "seeker" ? "bezeled" : "gray"}
       onClick={handleClick}
     >
-      {event.role === "seeker" ? <QR24Icon /> : <Edit28Icon />}
+      {event.role === "seeker" ? <AddCircle28Icon /> : <Edit28Icon />}
     </InlineButtons.Item>
   );
 };

@@ -141,3 +141,16 @@ export const useCheckinMutation = (id: number) =>
       return response.data;
     },
   });
+
+export const useRegisterMutation = (id: number) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await api.post(`/events/${id}/register`, {
+        form: {
+          name: "ASD",
+        },
+      });
+
+      return response.data;
+    },
+  });

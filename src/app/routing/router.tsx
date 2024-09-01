@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Router, Route, Switch } from "wouter";
 
 import Tabbar from "./Tabbar";
+import Setup from "@/pages/index-page";
 
 const EventsPage = lazy(() => import("@/pages/events/page"));
 const EventPage = lazy(() => import("@/pages/events/[id]/page"));
@@ -30,6 +31,7 @@ const InvitationPage = lazy(() => import("@/pages/invitations/[id]/page"));
 export default function AppRouter() {
   return (
     <Router base={import.meta.env.BASE_URL}>
+      <Setup />
       <main>
         <Route path="/">
           <Suspense fallback={<div>Loading page...</div>}>
