@@ -80,7 +80,19 @@ export const useCreateEventMutation = () => {
         formData.append("end_date", data.end_date.toISOString());
       }
 
-      const response = await api.post("/events", formData, {
+      const response = await api.post<{
+        id: number;
+        org_id: number;
+        creator_id: number;
+        title: string;
+        description: string;
+        cover_img: string;
+        location: string;
+        start_date: Date;
+        end_date: Date;
+        form: unknown;
+        created_at: Date;
+      }>("/events", formData, {
         headers: {
           "Content-Type": "form-data",
         },

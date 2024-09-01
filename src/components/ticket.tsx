@@ -148,7 +148,11 @@ function TicketContent({
             <div className="pt-20">
               {initDataRaw && <QRCode value={initDataRaw} size={200} />}
             </div>
-            <Button onClick={onClose} mode="outline" className="mt-10">
+            <Button
+              onClick={onClose}
+              mode="outline"
+              className="mt-10 text-black"
+            >
               Закрыть
             </Button>
           </div>

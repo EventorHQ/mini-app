@@ -4,7 +4,7 @@ import DateCell from "@/components/date-cell";
 import FileCell from "@/components/file-cell";
 import { Cancel24Icon } from "@/components/ui/icons/cancel24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { useBackButton } from "@telegram-apps/sdk-react";
+import { useBackButton, useMainButton } from "@telegram-apps/sdk-react";
 import {
   Cell,
   FileInput,
@@ -34,6 +34,7 @@ export default function CreateEventPage() {
   const { mutateAsync: createEvent } = useCreateEventMutation();
   const { setParams, setIsVisible } = useTabbarActions();
   const bb = useBackButton();
+  const mb = useMainButton();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -58,26 +59,43 @@ export default function CreateEventPage() {
 
   useEffect(() => {
     setIsVisible(false);
+    setParams({
+      isVisible: false,
+    });
+
+    return () => {
+      mb.hide();
+    };
   }, []);
 
   useEffect(() => {
-    setParams({
-      isVisible: true,
+    const handleClick = async () => {
+      mb.showLoader();
+
+      const result = await createEvent({
+        title: formData.title,
+        description: formData.description,
+        location: formData.location,
+        org_id: formData.org_id!,
+        start_date: formData.start_date || new Date(),
+        end_date: formData.end_date,
+        cover: formData.cover!,
+      });
+      mb.hideLoader();
+      navigate(`/events/${result.id}`);
+    };
+
+    mb.on("click", handleClick);
+    mb.setParams({
       text: "Создать",
-      onClick: () => {
-        createEvent({
-          title: formData.title,
-          description: formData.description,
-          location: formData.location,
-          org_id: formData.org_id!,
-          start_date: formData.start_date || new Date(),
-          end_date: formData.end_date,
-          cover: formData.cover!,
-        }).then((res) => {
-          navigate(`/events/${res.id}`);
-        });
-      },
+      isEnabled: true,
+      isVisible: true,
+      isLoaderVisible: false,
     });
+
+    return () => {
+      mb.off("click", handleClick);
+    };
   }, [formData]);
 
   useEffect(() => {
