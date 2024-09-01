@@ -14,7 +14,7 @@ export const useStartApp = () => {
     const suspectedEventId = Number(initData.startParam);
 
     if (isNaN(suspectedEventId)) {
-      navigate(`/invitation/${initData.startParam}`);
+      navigate(`/invitations/${initData.startParam}`);
     } else {
       navigate(`/events/${suspectedEventId}`);
     }

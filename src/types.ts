@@ -39,6 +39,7 @@ export type Invitation = {
     last_name: string;
   };
   org: {
+    id: number;
     title: string;
     avatar_img: string;
     is_fancy: boolean;

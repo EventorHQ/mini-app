@@ -1,4 +1,4 @@
-import { retrieveLaunchParams } from "@telegram-apps/sdk-react";
+import { retrieveLaunchParams, User } from "@telegram-apps/sdk-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -16,4 +16,13 @@ export function getBottomPadding() {
 
 export function getTelegramAvatar(username?: string) {
   return `https://t.me/i/userpic/320/${username}.jpg`;
+}
+
+export function getAcronym(user: User) {
+  const lastName = user.lastName || " ";
+  return user.firstName[0] + lastName[0];
+}
+
+export async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

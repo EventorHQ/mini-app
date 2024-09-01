@@ -6,9 +6,9 @@ export const useGetInvitationQuery = (id: string) => {
   return useQuery({
     queryKey: ["invitation", id],
     queryFn: async () => {
-      const response = await api.get(`/invitations/${id}`);
+      const response = await api.get<Invitation>(`/invitations/${id}`);
 
-      return response.data as Invitation;
+      return response.data;
     },
   });
 };
