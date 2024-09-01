@@ -9,6 +9,7 @@ import { FC } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
 import { Edit28Icon } from "./ui/icons/edit28";
 import QR24Icon from "./ui/icons/qr24";
+import { ticket } from "./ticket";
 
 export interface EventButtonsProps {
   event: DetailedEvent;
@@ -19,7 +20,11 @@ const ActionButton: FC<EventButtonsProps> = ({ event }) => {
 
   if (event.role === "visitor") {
     const handleClick = () => {
-      alert("Showing ticket");
+      ticket({
+        title: event.title,
+        date: new Date(event.start_date),
+        location: event.location,
+      });
     };
 
     return (

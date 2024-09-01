@@ -14,6 +14,7 @@ import { AppRoot } from "@telegram-apps/telegram-ui";
 import { type FC, useEffect } from "react";
 import Router from "./routing/router";
 import { IOS_PLATFORMS } from "@/config/config";
+import { Ticket } from "@/components/ticket";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,7 +56,7 @@ export const App: FC = () => {
         <TabbarProvider>
           <Router />
         </TabbarProvider>
-        <div id="ticket-root"></div>
+        <Ticket />
       </AppRoot>
     </QueryClientProvider>
   );

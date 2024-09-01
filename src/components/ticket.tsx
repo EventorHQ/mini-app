@@ -1,67 +1,66 @@
+import { useDateFormat } from "@/hooks/use-date-format";
 import { cn } from "@/lib/utils";
-import { Event } from "@/types";
-import {
-  retrieveLaunchParams,
-  useBackButton,
-  useMiniApp,
-} from "@telegram-apps/sdk-react";
-import { Caption, Text, Title } from "@telegram-apps/telegram-ui";
-import {
-  createContext,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { createPortal } from "react-dom";
+import { retrieveLaunchParams, useMiniApp } from "@telegram-apps/sdk-react";
+import { Button, Caption, Text, Title } from "@telegram-apps/telegram-ui";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import QRCode from "react-qr-code";
 
-const ANIMATION_DURATION_MS = 1000;
+const ANIMATION_DURATION_MS = 500;
 
-interface TicketProps {
-  event: Event;
-  children?: ReactNode;
-  backButtonHandler?: () => void;
+type TicketEvent = {
+  title: string;
+  date: Date;
+  location: string;
+};
+
+let listeners: VoidFunction[] = [];
+let ticketState: TicketEvent | undefined = undefined;
+
+export const ticketStore = {
+  setTicket(event: TicketEvent) {
+    ticketState = { ...event };
+    emitChange();
+  },
+  subscribe(listener: VoidFunction) {
+    listeners = [...listeners, listener];
+    return () => {
+      listeners = listeners.filter((l) => l !== listener);
+    };
+  },
+  getSnapshot() {
+    return ticketState;
+  },
+};
+
+function emitChange() {
+  for (const listener of listeners) {
+    listener();
+  }
 }
 
-export function Ticket({ event, children, backButtonHandler }: TicketProps) {
+export const ticket = (event: TicketEvent) => {
+  ticketStore.setTicket(event);
+};
+
+export function Ticket() {
+  const event = useSyncExternalStore(
+    ticketStore.subscribe,
+    ticketStore.getSnapshot,
+  );
   const [isVisible, setIsVisible] = useState(false);
   const [displayClassName, setDisplayClassName] = useState("hidden");
 
   const miniApp = useMiniApp();
-  const bb = useBackButton();
-
-  const toggleTicket = () => {
-    // if (isVisible) {
-    //   miniApp.setHeaderColor("secondary_bg_color");
-    // } else {
-    //   miniApp.setHeaderColor("#000000");
-    // }
-    setIsVisible((prev) => !prev);
-  };
 
   useEffect(() => {
-    if (backButtonHandler) {
-      if (isVisible) {
-        bb.off("click", backButtonHandler);
-        bb.on("click", toggleTicket);
-
-        return () => {
-          bb.off("click", toggleTicket);
-          bb.on("click", backButtonHandler);
-        };
-      }
-    } else if (isVisible) {
-      bb.on("click", toggleTicket);
-      bb.show();
-      return () => {
-        bb.off("click", toggleTicket);
-        bb.hide();
-      };
+    if (event) {
+      setIsVisible(true);
     }
-  }, [isVisible]);
+  }, [event]);
+
+  const closeTicket = () => {
+    setIsVisible((prev) => !prev);
+  };
 
   useEffect(() => {
     if (isVisible) {
@@ -77,6 +76,7 @@ export function Ticket({ event, children, backButtonHandler }: TicketProps) {
       miniApp.setHeaderColor("secondary_bg_color");
       const timeout = setTimeout(() => {
         setDisplayClassName("opacity-0 hidden");
+        ticketState = undefined;
       }, ANIMATION_DURATION_MS);
 
       return () => clearTimeout(timeout);
@@ -84,29 +84,30 @@ export function Ticket({ event, children, backButtonHandler }: TicketProps) {
   }, [isVisible]);
 
   return (
-    <>
-      {createPortal(
-        <div
-          className={cn(
-            `h-screen fixed top-0 left-0 w-full z-50 bg-black transition-opacity duration-${ANIMATION_DURATION_MS}`,
-            displayClassName
-          )}
-        >
-          <TicketContent event={event} isOpen={isVisible} />
-        </div>,
-        document.getElementById("ticket-root") || document.body
+    <div
+      className={cn(
+        `h-screen fixed top-0 left-0 w-full z-50 bg-black transition-opacity duration-500`,
+        displayClassName,
       )}
-      <div className="flex flex-1 box-border" onClick={toggleTicket}>
-        {children}
-      </div>
-    </>
+    >
+      <TicketContent event={event} isOpen={isVisible} onClose={closeTicket} />
+    </div>
   );
 }
 
-function TicketContent({ event, isOpen }: { event: Event; isOpen: boolean }) {
+function TicketContent({
+  event,
+  isOpen,
+  onClose,
+}: {
+  event: TicketEvent | undefined;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const { initDataRaw } = retrieveLaunchParams();
   const [translateClassName, setTranslateClassName] =
     useState("translate-y-96");
+  const format = useDateFormat();
 
   useEffect(() => {
     if (!isOpen) {
@@ -125,7 +126,7 @@ function TicketContent({ event, isOpen }: { event: Event; isOpen: boolean }) {
       <div
         className={cn(
           "h-full w-full bg-white rounded-t-[47px] relative transition-transform duration-1000 translate-y-96",
-          translateClassName
+          translateClassName,
         )}
       >
         <div className="absolute top-0 left-[50%] -translate-x-[50%] -translate-y-[50%] h-[79px] w-[112px] rounded-[50%] bg-black"></div>
@@ -139,69 +140,20 @@ function TicketContent({ event, isOpen }: { event: Event; isOpen: boolean }) {
           <div className="flex flex-col items-center pt-6">
             <div className="text-black flex flex-col w-full px-5">
               <Title Component="h1" weight="1">
-                {event.title}
+                {event?.title}
               </Title>
-              <Text>{event.date}</Text>
-              <Caption>{event.location}</Caption>
+              <Text>{format(event?.date)}</Text>
+              <Caption>{event?.location}</Caption>
             </div>
             <div className="pt-20">
               {initDataRaw && <QRCode value={initDataRaw} size={200} />}
             </div>
+            <Button onClick={onClose} mode="outline" className="mt-10">
+              Закрыть
+            </Button>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export const useTicketContext = () => {
-  const value = useContext(TicketContext);
-  if (!value) {
-    throw new Error("useTicketContext must be used within a TicketProvider");
-  }
-
-  const setEvent = (event: Event | null, bbHandler?: () => void) => {
-    const { setEvent, setBbHandler } = value;
-    setEvent(event);
-    setBbHandler(bbHandler);
-  };
-
-  return {
-    event: value.event,
-    bbHandler: value.bbHandler,
-    setEvent,
-  };
-};
-
-export function TicketPortal() {
-  const { event, bbHandler } = useTicketContext();
-
-  if (!event) {
-    return null;
-  }
-
-  return <Ticket event={event} backButtonHandler={bbHandler} />;
-}
-
-type ContextValue = {
-  event: Event | null;
-  setEvent: (event: Event | null) => void;
-  bbHandler?: () => void;
-  setBbHandler: (bbHandler?: () => void) => void;
-};
-
-const TicketContext = createContext<ContextValue | null>(null);
-
-export function TicketProvider({ children }: PropsWithChildren) {
-  const [event, setEvent] = useState<Event | null>(null);
-  const [bbHandler, setBbHandler] = useState<() => void | undefined>();
-
-  const value = useMemo(
-    () => ({ event, setEvent, bbHandler, setBbHandler }),
-    [event, bbHandler]
-  );
-
-  return (
-    <TicketContext.Provider value={value}>{children}</TicketContext.Provider>
   );
 }

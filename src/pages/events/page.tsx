@@ -15,6 +15,7 @@ import {
 } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
+import { ticket } from "@/components/ticket";
 
 export default function EventsPage() {
   const { data: orgs, isLoading: isOrgsLoading } = useGetOrgsQuery();
@@ -76,7 +77,17 @@ export default function EventsPage() {
         subheader={<DateString date={events[0].start_date} />}
         before={<Image src={events[0].cover_img} />}
       >
-        <Button size="s" before={<QR24Icon />}>
+        <Button
+          size="s"
+          before={<QR24Icon />}
+          onClick={() =>
+            ticket({
+              title: events[0].title,
+              date: new Date(events[0].start_date),
+              location: events[0].location,
+            })
+          }
+        >
           Билет
         </Button>
       </Banner>
