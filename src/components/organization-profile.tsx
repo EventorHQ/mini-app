@@ -40,7 +40,7 @@ const BaseOrganizationInfo: FC<
       <div
         className={cn(
           "flex items-center justify-center gap-2",
-          isEditing && "hidden"
+          isEditing && "hidden",
         )}
       >
         <Title level="1" weight="1">
@@ -82,7 +82,7 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
   const initData = useInitData();
 
   const currentUser = organization.members!.find(
-    (member) => member.id === initData?.user?.id
+    (member) => member.id === initData?.user?.id,
   )!;
 
   const toggleEditing = () => {
@@ -153,6 +153,7 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
       )}
       {!isEditing && organization.members && (
         <Section header="Сотрудники">
+          <OrganizationInviteModal orgId={organization.id} />
           {organization.members.map((member) => (
             <Cell
               key={`member-${member.id}`}
@@ -171,7 +172,6 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
               {member.firstName} {member.lastName}
             </Cell>
           ))}
-          <OrganizationInviteModal orgId={organization.id} />
         </Section>
       )}
     </List>
