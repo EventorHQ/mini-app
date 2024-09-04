@@ -44,6 +44,12 @@
 }
 
 @layer components {
+  .tg-body {
+    font-size: 17px;
+    line-height: 22px;
+    letter-spacing: -0.43px;
+  }
+
   .tg-headline {
     font-size: 19px;
     line-height: 28px;

@@ -88,7 +88,9 @@ export default function NewOrganizationPage() {
         <Section header="Аватар">
           <FileCell
             file={formData.avatar}
-            after={<Cancel24Icon onClick={handleCancel} />}
+            after={
+              <Cancel24Icon className="text-tg-hint" onClick={handleCancel} />
+            }
           />
           <FileInput label="Выбрать изображение" onChange={handleInputChange} />
         </Section>

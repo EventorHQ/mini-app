@@ -45,3 +45,13 @@ export type Invitation = {
     is_fancy: boolean;
   };
 };
+
+export type FormField = {
+  type: FormFieldType;
+  required?: boolean;
+  label: string;
+};
+
+export const formFieldTypes = ["text", "wallet"] as const;
+
+export type FormFieldType = (typeof formFieldTypes)[number];

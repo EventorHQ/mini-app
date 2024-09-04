@@ -17,6 +17,8 @@ import {
 } from "@telegram-apps/telegram-ui";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
+import FormFields from "./form-fields";
+import { FormField } from "@/types";
 
 type FormData = {
   title: string;
@@ -26,6 +28,7 @@ type FormData = {
   start_date: Date | undefined;
   end_date: Date | undefined;
   cover: File | undefined;
+  form: FormField[];
 };
 
 export default function CreateEventPage() {
@@ -44,6 +47,7 @@ export default function CreateEventPage() {
     start_date: new Date(),
     end_date: undefined,
     cover: undefined,
+    form: [],
   });
 
   const handleFileChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +60,10 @@ export default function CreateEventPage() {
     (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setFormData((prev) => ({ ...prev, [field]: evt.target.value }));
     };
+
+  const handleFormChange = (fields: FormField[]) => {
+    setFormData((prev) => ({ ...prev, form: fields }));
+  };
 
   useEffect(() => {
     setIsVisible(false);
@@ -80,6 +88,7 @@ export default function CreateEventPage() {
         start_date: formData.start_date || new Date(),
         end_date: formData.end_date,
         cover: formData.cover!,
+        form: formData.form,
       });
       mb.hideLoader();
       navigate(`/events/${result.id}`);
@@ -175,6 +184,7 @@ export default function CreateEventPage() {
               file={formData.cover}
               after={
                 <Cancel24Icon
+                  className="text-tg-hint"
                   onClick={() =>
                     setFormData((prev) => ({ ...prev, cover: undefined }))
                   }
@@ -197,6 +207,7 @@ export default function CreateEventPage() {
           onChange={handleInputChange("description")}
         />
       </Section>
+      <FormFields fields={formData.form} onFieldsChange={handleFormChange} />
     </List>
   );
 }
