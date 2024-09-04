@@ -1,11 +1,12 @@
+import { useNavigate } from "@/hooks/use-navigate";
 import { useBackButton } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
 import { useParams } from "wouter";
-import { navigate } from "wouter/use-browser-location";
 
 export default function CheckedInPage() {
   const bb = useBackButton();
   const params = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClick = () => {

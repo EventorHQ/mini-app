@@ -20,17 +20,19 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: false,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
   },
 });
 
 export const App: FC = () => {
-  const lp = useLaunchParams();
+  const { platform } = useLaunchParams();
   const miniApp = useMiniApp();
   const themeParams = useThemeParams();
   const viewport = useViewport();
 
   useEffect(() => {
+    // Additional request fixes background issue on iOS
     postEvent("web_app_request_theme");
   }, []);
 
@@ -51,7 +53,7 @@ export const App: FC = () => {
     <QueryClientProvider client={queryClient}>
       <AppRoot
         appearance={miniApp.isDark ? "dark" : "light"}
-        platform={IOS_PLATFORMS.includes(lp.platform) ? "ios" : "base"}
+        platform={IOS_PLATFORMS.includes(platform) ? "ios" : "base"}
       >
         <TabbarProvider>
           <Router />
