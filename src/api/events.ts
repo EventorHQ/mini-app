@@ -1,3 +1,4 @@
+import { FormField } from "@/types";
 import api from "./axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -39,6 +40,9 @@ export type DetailedEvent = {
     id: number;
     title: string;
     is_fancy: boolean;
+  };
+  form: {
+    fields: FormField[];
   };
 };
 
@@ -165,11 +169,9 @@ export const useCheckinMutation = (id: number) => {
 
 export const useRegisterMutation = (id: number) =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async (form: Record<string, string | undefined>) => {
       const response = await api.post(`/events/${id}/register`, {
-        form: {
-          name: "ASD",
-        },
+        form: JSON.stringify(form),
       });
 
       return response.data;

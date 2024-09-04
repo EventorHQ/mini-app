@@ -60,7 +60,7 @@ export default function NewOrganizationPage() {
     setParams({
       onClick: () => {
         createOrg(formData).then((res) => {
-          navigate(`/organizations/${res.id}`);
+          navigate(`/orgs/${res.id}`);
         });
       },
       text: "Создать",

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Router, Route, Switch } from "wouter";
+import { Router, Route, Switch, Redirect } from "wouter";
 
 import Tabbar from "./Tabbar";
 import Setup from "@/pages/index-page";
@@ -39,6 +39,11 @@ export default function AppRouter() {
           </Suspense>
         </Route>
         <Switch>
+          <Route path="/events">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EventsPage />
+            </Suspense>
+          </Route>
           <Route path="/events/create">
             <Suspense fallback={<div>Loading page...</div>}>
               <CreateEventPage />
@@ -101,6 +106,9 @@ export default function AppRouter() {
           <Suspense fallback={<div>Loading page...</div>}>
             <InvitationPage />
           </Suspense>
+        </Route>
+        <Route path="*">
+          <Redirect to="/" />
         </Route>
       </main>
       <Tabbar />
