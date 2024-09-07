@@ -1,7 +1,7 @@
 import { useInitData } from "@telegram-apps/sdk-react";
 import api from "./axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { User } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { OrganizationRole, User } from "@/types";
 
 export const useCreateUserMutation = () => {
   const initData = useInitData();
@@ -31,6 +31,31 @@ export const useGetUserQuery = () => {
         username: response.data.username,
         avatar: response.data.photo_img,
       } as User;
+    },
+  });
+};
+
+export const useUpdateUserRoleMutation = (orgId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "organization", orgId],
+      });
+    },
+    mutationFn: async (data: {
+      userId: number;
+      role: OrganizationRole | undefined;
+    }) => {
+      const response = await api.patch(
+        `/orgs/${orgId}/members/${data.userId}`,
+        {
+          role: data.role,
+        },
+      );
+
+      return response.data;
     },
   });
 };

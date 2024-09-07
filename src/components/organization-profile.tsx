@@ -1,8 +1,7 @@
-import { Organization } from "@/types";
+import { Organization, User } from "@/types";
 import {
   Avatar,
   Button,
-  ButtonCell,
   Cell,
   Input,
   List,
@@ -13,8 +12,12 @@ import {
 } from "@telegram-apps/telegram-ui";
 import { ChangeEventHandler, FC, useState } from "react";
 import AvatarInput from "./avatar-input";
-import { getRole } from "@/lib/get-role";
-import { useHapticFeedback, useInitData } from "@telegram-apps/sdk-react";
+import { getNextRole, getPrevRole, getRole } from "@/lib/get-role";
+import {
+  useHapticFeedback,
+  useInitData,
+  usePopup,
+} from "@telegram-apps/sdk-react";
 import { Ellipsis24Icon } from "./ui/icons/ellipsis24";
 import { cn } from "@/lib/utils";
 import Check16Icon from "./ui/icons/check16";
@@ -23,10 +26,13 @@ import OrganizationInviteModal from "./organization-invite-modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { AddCircle28Icon } from "./ui/icons/addcircle28";
+import { Bin24Icon } from "./ui/icons/bin24";
+import { ArrowUpCircleFill20Icon } from "./ui/icons/arrowupcirclefill20";
+import { useUpdateUserRoleMutation } from "@/api/users";
 
 interface OrganizationProfileProps {
   organization: Organization;
@@ -78,6 +84,9 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const { mutateAsync: updateOrganization } = useUpdateOrganizationMutation();
+  const { mutateAsync: updateUserRole } = useUpdateUserRoleMutation(
+    organization.id,
+  );
   const [formData, setFormData] = useState<{
     title?: string;
     description?: string;
@@ -89,6 +98,7 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
 
   const initData = useInitData();
   const haptic = useHapticFeedback();
+  const popup = usePopup();
 
   const currentUser = organization.members!.find(
     (member) => member.id === initData?.user?.id,
@@ -111,6 +121,96 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
     }).then(() => {
       setIsEditing(false);
     });
+  };
+
+  const handlePromoteClick = (member: User) => () => {
+    if (member.role === "admin") {
+      popup.open({
+        title: "Повысить сотрудника",
+        message: `${member.firstName} уже занимает высшую должность.`,
+      });
+    } else {
+      popup
+        .open({
+          title: "Повысить сотрудника",
+          message: `Вы уверены, что хотите повысить ${
+            member.firstName
+          } до ${getRole(getNextRole(member.role))}?`,
+
+          buttons: [
+            { type: "cancel" },
+            {
+              type: "ok",
+              id: "ok",
+            },
+          ],
+        })
+        .then((res) => {
+          if (res === "ok") {
+            updateUserRole({
+              userId: member.id,
+              role: getNextRole(member.role),
+            }).then(console.log);
+          }
+        });
+    }
+  };
+
+  const handleDemoteClick = (member: User) => () => {
+    if (member.role === "member") {
+      popup.open({
+        title: "Понизить сотрудника",
+        message: `${member.firstName} уже занимает низшую должность.`,
+      });
+    } else {
+      popup
+        .open({
+          title: "Понизить сотрудника",
+          message: `Вы уверены, что хотите понизить ${
+            member.firstName
+          } до ${getRole(getPrevRole(member.role))}?`,
+
+          buttons: [
+            { type: "cancel" },
+            {
+              type: "ok",
+              id: "ok",
+            },
+          ],
+        })
+        .then((res) => {
+          if (res === "ok") {
+            updateUserRole({
+              userId: member.id,
+              role: getPrevRole(member.role),
+            }).then(console.log);
+          }
+        });
+    }
+  };
+
+  const handleDeleteClick = (member: User) => () => {
+    popup
+      .open({
+        title: "Удалить сотрудника",
+        message: `Вы уверены, что хотите уволить ${member.firstName}?`,
+
+        buttons: [
+          { type: "cancel" },
+          {
+            type: "ok",
+            id: "ok",
+          },
+        ],
+      })
+      .then((res) => {
+        if (res === "ok") {
+          updateUserRole({
+            userId: member.id,
+            role: undefined,
+          }).then(console.log);
+        }
+      });
   };
 
   return (
@@ -168,12 +268,16 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
               <Cell
                 before={<Avatar src={member.avatar} size={48} />}
                 description={getRole(member.role)}
+                hovered={false}
                 after={
                   member.id === currentUser.id ? (
                     <span className="text-tg-hint">Вы</span>
                   ) : currentUser.role == "admin" ? (
-                    <DropdownMenuTrigger>
-                      <Tappable onClick={() => haptic.impactOccurred("light")}>
+                    <DropdownMenuTrigger
+                      className="focus:ring-0 focus:outline-none"
+                      onClick={() => haptic.impactOccurred("light")}
+                    >
+                      <Tappable>
                         <Ellipsis24Icon className="text-tg-hint" />
                       </Tappable>
                     </DropdownMenuTrigger>
@@ -183,14 +287,35 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
                 {member.firstName} {member.lastName}
               </Cell>
               <DropdownMenuContent>
-                <ButtonCell before={<AddCircle28Icon />}>Повысить</ButtonCell>
-                <DropdownMenuSeparator />
-                <ButtonCell
-                  mode="destructive"
-                  className="border-t border-tg-hint"
+                <DropdownMenuItem
+                  onClick={handlePromoteClick(member)}
+                  className="cursor-pointer"
                 >
-                  Удалить
-                </ButtonCell>
+                  <div className="flex items-center gap-3 pl-1">
+                    <ArrowUpCircleFill20Icon />
+                    Повысить
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleDemoteClick(member)}
+                  className="cursor-pointer"
+                >
+                  <div className="flex items-center gap-3 pl-1">
+                    <ArrowUpCircleFill20Icon className="rotate-180" />
+                    Понизить
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleDeleteClick(member)}
+                  className="cursor-pointer text-tg-destructive"
+                >
+                  <div className="flex items-center gap-2 pl-1">
+                    <Bin24Icon />
+                    Удалить
+                  </div>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ))}
