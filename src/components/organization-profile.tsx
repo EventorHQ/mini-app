@@ -2,6 +2,7 @@ import { Organization } from "@/types";
 import {
   Avatar,
   Button,
+  ButtonCell,
   Cell,
   Input,
   List,
@@ -13,12 +14,19 @@ import {
 import { ChangeEventHandler, FC, useState } from "react";
 import AvatarInput from "./avatar-input";
 import { getRole } from "@/lib/get-role";
-import { useInitData } from "@telegram-apps/sdk-react";
+import { useHapticFeedback, useInitData } from "@telegram-apps/sdk-react";
 import { Ellipsis24Icon } from "./ui/icons/ellipsis24";
 import { cn } from "@/lib/utils";
 import Check16Icon from "./ui/icons/check16";
 import { useUpdateOrganizationMutation } from "@/api/orgs";
 import OrganizationInviteModal from "./organization-invite-modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { AddCircle28Icon } from "./ui/icons/addcircle28";
 
 interface OrganizationProfileProps {
   organization: Organization;
@@ -80,6 +88,7 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
   });
 
   const initData = useInitData();
+  const haptic = useHapticFeedback();
 
   const currentUser = organization.members!.find(
     (member) => member.id === initData?.user?.id,
@@ -155,22 +164,35 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
         <Section header="Сотрудники">
           <OrganizationInviteModal orgId={organization.id} />
           {organization.members.map((member) => (
-            <Cell
-              key={`member-${member.id}`}
-              before={<Avatar src={member.avatar} size={48} />}
-              description={getRole(member.role)}
-              after={
-                member.id === currentUser.id ? (
-                  <span className="text-tg-hint">Вы</span>
-                ) : currentUser.role == "admin" ? (
-                  <Tappable>
-                    <Ellipsis24Icon className="text-tg-hint" />
-                  </Tappable>
-                ) : null
-              }
-            >
-              {member.firstName} {member.lastName}
-            </Cell>
+            <DropdownMenu key={`member-${member.id}`}>
+              <Cell
+                before={<Avatar src={member.avatar} size={48} />}
+                description={getRole(member.role)}
+                after={
+                  member.id === currentUser.id ? (
+                    <span className="text-tg-hint">Вы</span>
+                  ) : currentUser.role == "admin" ? (
+                    <DropdownMenuTrigger>
+                      <Tappable onClick={() => haptic.impactOccurred("light")}>
+                        <Ellipsis24Icon className="text-tg-hint" />
+                      </Tappable>
+                    </DropdownMenuTrigger>
+                  ) : null
+                }
+              >
+                {member.firstName} {member.lastName}
+              </Cell>
+              <DropdownMenuContent>
+                <ButtonCell before={<AddCircle28Icon />}>Повысить</ButtonCell>
+                <DropdownMenuSeparator />
+                <ButtonCell
+                  mode="destructive"
+                  className="border-t border-tg-hint"
+                >
+                  Удалить
+                </ButtonCell>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ))}
         </Section>
       )}
