@@ -1,21 +1,12 @@
 import { ReadEvent, useGetEventsQuery } from "@/api/events";
 import { useGetOrgsQuery } from "@/api/orgs";
-import { DateString } from "@/components/date";
 import EventCell from "@/components/event-cell";
-import QR24Icon from "@/components/ui/icons/qr24";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
 import { useBackButton } from "@telegram-apps/sdk-react";
-import {
-  Banner,
-  List,
-  Section,
-  Image,
-  Button,
-  Placeholder,
-} from "@telegram-apps/telegram-ui";
+import { List, Section, Placeholder } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
-import { ticket } from "@/components/ticket";
+import EventBanner from "@/components/event-banner";
 
 export default function EventsPage() {
   const { data: orgs, isLoading: isOrgsLoading } = useGetOrgsQuery();
@@ -70,29 +61,9 @@ export default function EventsPage() {
 
   return (
     <List>
-      <Banner
-        type="section"
-        callout="Ближайшее мероприятие"
-        header={events[0].title}
-        subheader={<DateString date={events[0].start_date} />}
-        before={<Image src={events[0].cover_img} />}
-      >
-        <Button
-          size="s"
-          before={<QR24Icon />}
-          onClick={() =>
-            ticket({
-              title: events[0].title,
-              date: new Date(events[0].start_date),
-              location: events[0].location,
-            })
-          }
-        >
-          Билет
-        </Button>
-      </Banner>
+      <EventBanner event={events[0]} />
       {events.length > 0 ? (
-        <Section header="Мои мероприятия">
+        <Section header="Мои мероприятия" className="mb-28">
           {events.map((event) => (
             <EventCell
               key={event.event_id}

@@ -19,6 +19,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
 import FormFields from "./form-fields";
 import { FormField } from "@/types";
+import { toast } from "sonner";
 
 type FormData = {
   title: string;
@@ -80,7 +81,7 @@ export default function CreateEventPage() {
     const handleClick = async () => {
       mb.showLoader();
 
-      const result = await createEvent({
+      createEvent({
         title: formData.title,
         description: formData.description,
         location: formData.location,
@@ -89,9 +90,39 @@ export default function CreateEventPage() {
         end_date: formData.end_date,
         cover: formData.cover!,
         form: formData.form,
-      });
-      mb.hideLoader();
-      navigate(`/events/${result.id}`);
+      })
+        .then((result) => {
+          navigate(`/events/${result.id}`);
+          toast.success("Мероприятие создано");
+        })
+        .catch((error) => {
+          // TODO: aggregate errors server-side, return in more pleasing interface
+          toast.error("Ошибка создания мероприятия", {
+            description: error.response.data.error.issues.reduce(
+              (acc: string, issue: { message: string }) => {
+                return acc + " " + issue.message;
+              },
+              "",
+            ),
+          });
+        })
+        .finally(() => {
+          mb.hideLoader();
+        });
+
+      // const result = await createEvent({
+      //   title: formData.title,
+      //   description: formData.description,
+      //   location: formData.location,
+      //   org_id: formData.org_id!,
+      //   start_date: formData.start_date || new Date(),
+      //   end_date: formData.end_date,
+      //   cover: formData.cover!,
+      //   form: formData.form,
+      // });
+      // mb.hideLoader();
+      // navigate(`/events/${result.id}`);
+      // toast.success("Мероприятие создано");
     };
 
     mb.on("click", handleClick);
@@ -121,7 +152,7 @@ export default function CreateEventPage() {
   }, []);
 
   return (
-    <List className="pb-24">
+    <List>
       <Section header="Основная информация">
         <Input
           placeholder="Название"

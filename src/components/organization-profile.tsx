@@ -33,6 +33,7 @@ import {
 import { Bin24Icon } from "./ui/icons/bin24";
 import { ArrowUpCircleFill20Icon } from "./ui/icons/arrowupcirclefill20";
 import { useUpdateUserRoleMutation } from "@/api/users";
+import { toast } from "sonner";
 
 interface OrganizationProfileProps {
   organization: Organization;
@@ -150,7 +151,9 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
             updateUserRole({
               userId: member.id,
               role: getNextRole(member.role),
-            }).then(console.log);
+            }).then(() => {
+              toast.success(`Сотрудник повышен`);
+            });
           }
         });
     }
@@ -183,7 +186,9 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
             updateUserRole({
               userId: member.id,
               role: getPrevRole(member.role),
-            }).then(console.log);
+            }).then(() => {
+              toast.success(`Сотрудник понижен`);
+            });
           }
         });
     }
@@ -208,7 +213,9 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
           updateUserRole({
             userId: member.id,
             role: undefined,
-          }).then(console.log);
+          }).then(() => {
+            toast.success(`Сотрудник уволен`);
+          });
         }
       });
   };

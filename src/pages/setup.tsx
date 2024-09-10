@@ -12,7 +12,7 @@ export default function Setup() {
   }, []);
 
   useEffect(() => {
-    import.meta.env.DEV && console.log(location);
+    import.meta.env.DEV && console.log("Location: ", location);
   }, [location]);
 
   useStartApp();

@@ -1,7 +1,7 @@
 import { Collapsible, CollapsibleContent } from "@/components/collapsible";
 import Building24Icon from "@/components/ui/icons/building24";
 import Logo24Icon from "@/components/ui/icons/logo24";
-import Person24Icon from "@/components/ui/icons/person24";
+// import Person24Icon from "@/components/ui/icons/person24";
 import { useTabbar } from "@/hooks/use-tabbar";
 import { cn, getBottomPadding } from "@/lib/utils";
 import { FixedLayout, Tabbar as TabbarView } from "@telegram-apps/telegram-ui";
@@ -32,7 +32,7 @@ export default function Tabbar() {
   };
 
   return (
-    <FixedLayout className="max-w-lg mx-auto">
+    <FixedLayout className="max-w-lg mx-auto backdrop-blur-sm">
       <nav className="flex w-full flex-col items-center">
         <Collapsible open={params.isVisible} className="flex w-full">
           <CollapsibleContent className="flex w-full">
@@ -44,7 +44,7 @@ export default function Tabbar() {
           className={cn(
             "w-full surface",
             params.isVisible ? "" : "custom-navbar",
-            isVisible && getBottomPadding()
+            isVisible && getBottomPadding(),
           )}
         >
           <CollapsibleContent className="w-full">
@@ -75,13 +75,13 @@ export default function Tabbar() {
               >
                 <Building24Icon />
               </TabbarView.Item>
-              <TabbarView.Item
+              {/* <TabbarView.Item
                 selected={selectedTab === "profile"}
                 text="Профиль"
                 onClick={handleClick("/profile")}
               >
                 <Person24Icon />
-              </TabbarView.Item>
+              </TabbarView.Item> */}
             </div>
           </CollapsibleContent>
         </Collapsible>

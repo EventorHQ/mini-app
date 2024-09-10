@@ -27,6 +27,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.15",
+    "sonner": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-3d": "^1.0.6",
     "tailwindcss-animate": "^1.0.7",

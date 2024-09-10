@@ -107,7 +107,7 @@ const Invitation: FC<{ invitation: string }> = ({ invitation }) => {
             onClick={isAccepted ? handleNavigateClick : handleAcceptClick}
             loading={isLoading}
           >
-            {isAccepted ? "К организации" : "Принять приглашение"}
+            {isAccepted ? "Открыть" : "Принять"}
           </Button>
         }
       >

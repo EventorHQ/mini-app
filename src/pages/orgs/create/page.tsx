@@ -12,6 +12,7 @@ import {
 } from "@telegram-apps/telegram-ui";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
+import { toast } from "sonner";
 
 type OrganizationFormData = {
   title: string;
@@ -59,9 +60,21 @@ export default function NewOrganizationPage() {
   useEffect(() => {
     setParams({
       onClick: () => {
-        createOrg(formData).then((res) => {
-          navigate(`/orgs/${res.id}`);
-        });
+        createOrg(formData)
+          .then((res) => {
+            navigate(`/orgs/${res.id}`);
+            toast.success("Организация создана");
+          })
+          .catch((error) => {
+            toast.error("Ошибка создания организации", {
+              description: error.response.data.error.issues.reduce(
+                (acc: string, issue: { message: string }) => {
+                  return acc + " " + issue.message;
+                },
+                "",
+              ),
+            });
+          });
       },
       text: "Создать",
       isVisible: true,

@@ -2,7 +2,8 @@ import { lazy, Suspense } from "react";
 import { Router, Route, Switch, Redirect } from "wouter";
 
 import Tabbar from "./Tabbar";
-import Setup from "@/pages/index-page";
+import Setup from "@/pages/setup";
+import { Toaster } from "@/components/ui/sonner";
 
 const EventsPage = lazy(() => import("@/pages/events/page"));
 const EventPage = lazy(() => import("@/pages/events/[id]/page"));
@@ -111,6 +112,7 @@ export default function AppRouter() {
           <Redirect to="/" />
         </Route>
       </main>
+      <Toaster />
       <Tabbar />
     </Router>
   );
