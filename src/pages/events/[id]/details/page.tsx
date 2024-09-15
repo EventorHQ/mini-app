@@ -23,25 +23,50 @@ import {
 import { FC, useEffect } from "react";
 import { useParams } from "wouter";
 import { isBefore } from "date-fns";
+import { toast } from "sonner";
+import { Cancel24Icon } from "@/components/ui/icons/cancel24";
 
 const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
-  const { mutate: deleteEvent } = useDeleteEventMutation(event.id);
+  const { mutateAsync: deleteEvent } = useDeleteEventMutation(event.id);
   const navigate = useNavigate();
+  const popup = usePopup();
 
   if (isBefore(new Date(event.start_date), new Date())) {
     return null;
   }
 
   const handleEditClick = () => {
-    navigate(`/events/${event.id}/edit`);
+    navigate(`/events/${event.id}/edit`, { state: { event: event.id } });
   };
 
   const handleDeleteClick = () => {
-    deleteEvent(undefined, {
-      onSuccess: () => {
-        navigate(`/events`);
-      },
-    });
+    popup
+      .open({
+        title: "Отмена мероприятия",
+        message: "Вы уверены, что хотите отменить мероприятие?",
+        buttons: [
+          {
+            type: "close",
+            id: "close",
+          },
+          {
+            type: "ok",
+            id: "ok",
+          },
+        ],
+      })
+      .then((id) => {
+        if (id === "ok") {
+          deleteEvent()
+            .then(() => {
+              navigate("/events");
+              toast.success("Мероприятие отменено");
+            })
+            .catch(() => {
+              toast.error("Не удалось отменить мероприятие");
+            });
+        }
+      });
   };
 
   return (
@@ -49,7 +74,11 @@ const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
       <ButtonCell before={<Edit28Icon />} onClick={handleEditClick}>
         Редактировать
       </ButtonCell>
-      <ButtonCell mode="destructive" onClick={handleDeleteClick}>
+      <ButtonCell
+        before={<Cancel24Icon className="size-7" />}
+        mode="destructive"
+        onClick={handleDeleteClick}
+      >
         Отменить
       </ButtonCell>
     </Section>

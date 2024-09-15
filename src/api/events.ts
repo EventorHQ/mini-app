@@ -63,6 +63,40 @@ export type EventAdministration = {
   checked_in_visitors: Visitor[];
 };
 
+export const useUpdateEventMutation = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (
+      data: Omit<CreateEventData, "cover"> & { cover?: File },
+    ) => {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("location", data.location);
+      formData.append("org_id", data.org_id);
+      formData.append("start_date", data.start_date.toISOString());
+      formData.append("form", JSON.stringify(data.form));
+
+      if (data.end_date) {
+        formData.append("end_date", data.end_date.toISOString());
+      }
+
+      if (data.cover) {
+        formData.append("cover_img", data.cover);
+      }
+
+      const response = await api.patch(`/events/${id}`, formData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["events", id],
+      });
+    },
+  });
+};
+
 export const useCreateEventMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -120,7 +154,7 @@ export const useGetEventsQuery = () => {
 
 export const useGetEventQuery = (id: number) => {
   return useQuery({
-    queryKey: ["event", id],
+    queryKey: ["events", id],
     queryFn: async () => {
       const response = await api.get<DetailedEvent>(`/events/${id}`);
       return response.data;
@@ -140,13 +174,20 @@ export const useGetEventAdministrationQuery = (id: number) => {
   });
 };
 
-export const useDeleteEventMutation = (id: number) =>
-  useMutation({
+export const useDeleteEventMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async () => {
       const response = await api.delete(`/events/${id}`);
       return response.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
+      });
+    },
   });
+};
 
 export const useCheckinMutation = (id: number) => {
   const queryClient = useQueryClient();

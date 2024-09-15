@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 const EventsPage = lazy(() => import("@/pages/events/page"));
 const EventPage = lazy(() => import("@/pages/events/[id]/page"));
 const EventDetailsPage = lazy(() => import("@/pages/events/[id]/details/page"));
+const EditEventPage = lazy(() => import("@/pages/events/[id]/edit/page"));
 const EventRegisterPage = lazy(
   () => import("@/pages/events/[id]/register/page"),
 );
@@ -66,6 +67,11 @@ export default function AppRouter() {
           <Route path="/events/:id/register">
             <Suspense fallback={<div>Loading page...</div>}>
               <EventRegisterPage />
+            </Suspense>
+          </Route>
+          <Route path="/events/:id/edit">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <EditEventPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/people/checkin">
