@@ -46,7 +46,7 @@ export type DetailedEvent = {
   };
 };
 
-type Visitor = {
+export type Visitor = {
   id: number;
   first_name: string;
   last_name: string;

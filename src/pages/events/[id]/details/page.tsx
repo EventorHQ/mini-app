@@ -111,10 +111,26 @@ export default function EventDetailsPage() {
     });
   }, [scanner, popup]);
 
-  const handlePeopleCellClick =
-    (type: "feedback" | "checkin" | "visitors") => () => {
-      navigate(`/events/${params.id}/people/${type}`);
-    };
+  const handleCheckedInClick = () => {
+    if (
+      data &&
+      data.checked_in_visitors &&
+      data.checked_in_visitors.length > 0
+    ) {
+      navigate(`/events/${params.id}/checkin`);
+    }
+  };
+
+  const handleVisitorsClick = () => {
+    navigate(`/events/${params.id}/people/visitors`);
+  };
+
+  const handleFeedbackClick = () => {
+    if (data && !!false) {
+      // TODO: add feedback
+      navigate(`/events/${params.id}/feedback`);
+    }
+  };
 
   if (!data || isLoading) {
     return <div>Loading...</div>;
@@ -124,20 +140,22 @@ export default function EventDetailsPage() {
     <List>
       <Section header="Участники">
         <Cell
-          onClick={handlePeopleCellClick("checkin")}
+          onClick={handleCheckedInClick}
           after={
             <div className="flex items-center justify-center gap-2">
               <Text className="text-tg-hint">
                 {data.total_checked_in_visitors}
               </Text>
-              <Chevron16Icon />
+              {data &&
+                data.checked_in_visitors &&
+                data.checked_in_visitors.length > 0 && <Chevron16Icon />}
             </div>
           }
         >
           Прошли Check-in
         </Cell>
         <Cell
-          onClick={handlePeopleCellClick("visitors")}
+          onClick={handleVisitorsClick}
           after={
             <div className="flex items-center justify-center gap-2">
               <Text className="text-tg-hint">{data.total_visitors}</Text>
@@ -150,11 +168,11 @@ export default function EventDetailsPage() {
       </Section>
       <Section>
         <Cell
-          onClick={handlePeopleCellClick("feedback")}
+          onClick={handleFeedbackClick}
           after={
             <div className="flex items-center justify-center gap-2">
               <Text className="text-tg-hint">0</Text>
-              <Chevron16Icon />
+              {!!false && <Chevron16Icon />}
             </div>
           }
         >
