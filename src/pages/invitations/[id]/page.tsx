@@ -116,7 +116,7 @@ const Invitation: FC<{ invitation: string }> = ({ invitation }) => {
             src={org.avatar_img}
             size={96}
             className={cn(
-              "shadow-none bg-gray-200 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]",
+              "shadow-none bg-gray-200 transition-all duration-500 ease-smooth",
               "after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-[var(--tgui--green)] after:rounded-full after:transition-opacity after:duration-200",
               isAccepted
                 ? "opacity-0 translate-x-[50%] after:opacity-1"
@@ -125,7 +125,7 @@ const Invitation: FC<{ invitation: string }> = ({ invitation }) => {
           />
           <Avatar
             className={cn(
-              "shadow-none bg-gray-200 transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]",
+              "shadow-none bg-gray-200 transition-all duration-500 ease-smooth",
               "after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-[var(--tgui--green)] after:rounded-full after:transition-opacity after:duration-200",
               isAccepted
                 ? "opacity-0 -translate-x-[50%] after:opacity-1"

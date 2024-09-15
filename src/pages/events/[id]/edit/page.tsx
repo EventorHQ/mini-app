@@ -37,7 +37,9 @@ type FormData = {
 };
 
 const Inner: FC<{ eventData: DetailedEvent }> = ({ eventData }) => {
-  const [isMultipleDays, setIsMultipleDays] = useState(false);
+  const [isMultipleDays, setIsMultipleDays] = useState(
+    eventData.start_date !== eventData.end_date,
+  );
   const { data: orgs } = useGetOrgsQuery();
   const { mutateAsync: updateEvent } = useUpdateEventMutation(eventData.id);
   const { setParams, setIsVisible } = useTabbarActions();

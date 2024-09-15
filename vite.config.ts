@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => ({
   base: "/mini-app/",
   plugins: [react(), tsconfigPaths()],
   publicDir: "./public",
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
   server:
     mode === "development"
       ? {
