@@ -24,6 +24,9 @@ const CreateEventPage = lazy(() => import("@/pages/events/create/page"));
 
 const OrgsPage = lazy(() => import("@/pages/orgs/page"));
 const OrgPage = lazy(() => import("@/pages/orgs/[id]/page"));
+const OrgInvitationsPage = lazy(
+  () => import("@/pages/orgs/[id]/invitations/page"),
+);
 const CreateOrgPage = lazy(() => import("@/pages/orgs/create/page"));
 
 const ProfilePage = lazy(() => import("@/pages/profile/page"));
@@ -33,7 +36,7 @@ export default function AppRouter() {
   return (
     <Router base={import.meta.env.BASE_URL}>
       <Setup />
-      <main>
+      <main className="pb-14">
         <Route path="/">
           <Suspense fallback={<div>Loading page...</div>}>
             <EventsPage />
@@ -95,6 +98,11 @@ export default function AppRouter() {
           <Route path="/orgs/:id">
             <Suspense fallback={<div>Loading page...</div>}>
               <OrgPage />
+            </Suspense>
+          </Route>
+          <Route path="/orgs/:id/invitations">
+            <Suspense fallback={<div>Loading page...</div>}>
+              <OrgInvitationsPage />
             </Suspense>
           </Route>
         </Switch>

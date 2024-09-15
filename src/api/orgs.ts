@@ -93,12 +93,23 @@ export const useUpdateOrganizationMutation = () => {
   });
 };
 
-export const useCreateInviteLinkMutation = () => {
-  return useMutation({
-    mutationFn: async (data: { orgId: number; role: OrganizationRole }) => {
-      const response = await api.post("/invitations", data);
+export const useCreateInviteLinkMutation = (orgId: number) => {
+  const queryClient = useQueryClient();
 
-      return response.data as { id: string };
+  return useMutation({
+    mutationFn: async (data: {
+      role: OrganizationRole;
+      isReusable: boolean;
+      orgId: number;
+    }) => {
+      const response = await api.post<{ id: string }>("/invitations", data);
+
+      return response.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["invitations", orgId],
+      });
     },
   });
 };

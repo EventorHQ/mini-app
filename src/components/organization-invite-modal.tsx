@@ -6,14 +6,17 @@ import {
   Modal,
   Section,
   Selectable,
+  Switch,
 } from "@telegram-apps/telegram-ui";
 import { PersonAdd28Icon } from "./ui/icons/person-add28";
 import { Close28Icon } from "./ui/icons/close28";
-import { OrganizationRole } from "@/types";
+import { OrganizationRole, User } from "@/types";
 import { useState } from "react";
 import { useCreateInviteLinkMutation } from "@/api/orgs";
-import { useUtils } from "@telegram-apps/sdk-react";
+import { useLaunchParams, useUtils } from "@telegram-apps/sdk-react";
 import { APP_URL } from "@/config/config";
+import { toast } from "sonner";
+import { copyToClipboard } from "@/lib/copy-to-clipboard";
 
 const roles: { value: OrganizationRole; label: string }[] = [
   {
@@ -30,6 +33,14 @@ const roles: { value: OrganizationRole; label: string }[] = [
   },
 ];
 
+const getRoles = (role: OrganizationRole | undefined) => {
+  if (role === "admin") {
+    return roles;
+  }
+
+  return roles.filter((role) => role.value !== "admin");
+};
+
 const descriptions: Record<OrganizationRole, string> = {
   member: "Сотрудник сможет создавать и редактировать мероприятия",
   moderator:
@@ -40,18 +51,21 @@ const descriptions: Record<OrganizationRole, string> = {
 
 interface OrganizationInviteModalProps {
   orgId: number;
+  currentUser: User;
 }
 
 export default function OrganizationInviteModal({
   orgId,
+  currentUser,
 }: OrganizationInviteModalProps) {
   const [selectedRole, setSelectedRole] = useState<OrganizationRole>("member");
+  const [isReusable, setIsReusable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const { mutateAsync: createInviteLink } = useCreateInviteLinkMutation();
+  const { mutateAsync: createInviteLink } = useCreateInviteLinkMutation(orgId);
   const utils = useUtils();
-
+  const lp = useLaunchParams();
   const handleRoleSelectionChange = (role: OrganizationRole) => () => {
     setSelectedRole(role);
   };
@@ -59,11 +73,24 @@ export default function OrganizationInviteModal({
   const handleInviteClick = () => {
     setIsLoading(true);
     createInviteLink({
-      orgId,
+      isReusable,
       role: selectedRole,
+      orgId,
     })
       .then(({ id }) => {
-        utils.shareURL(`${APP_URL}?startapp=${id}`);
+        const link = `${APP_URL}?startapp=${id}`;
+
+        if (lp.platform.startsWith("web")) {
+          copyToClipboard(link)
+            .then(() => {
+              toast.success("Ссылка скопирована в буфер обмена");
+            })
+            .catch(() => {
+              toast.error("Не удалось скопировать ссылку");
+            });
+        } else {
+          utils.shareURL(link);
+        }
       })
       .catch(console.error)
       .finally(() => {
@@ -90,6 +117,26 @@ export default function OrganizationInviteModal({
     >
       <List className="bg-tg-bg-second">
         <Section
+          header="Тип ссылки"
+          footer={
+            isReusable
+              ? "Ссылка будет действительна пока модератор её не отменит"
+              : "Ссылка будет действительна только один раз"
+          }
+        >
+          <Cell
+            className="bg-tg-bg-section"
+            after={
+              <Switch
+                checked={isReusable}
+                onChange={(e) => setIsReusable(e.target.checked)}
+              />
+            }
+          >
+            Многоразовая
+          </Cell>
+        </Section>
+        <Section
           header="Уровень доступа"
           footer={
             <Section.Footer className="min-h-24">
@@ -97,7 +144,7 @@ export default function OrganizationInviteModal({
             </Section.Footer>
           }
         >
-          {roles.map(({ value, label }) => (
+          {getRoles(currentUser.role).map(({ value, label }) => (
             <Cell
               key={value}
               className="bg-tg-bg-section"

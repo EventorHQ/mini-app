@@ -34,6 +34,9 @@ import { Bin24Icon } from "./ui/icons/bin24";
 import { ArrowUpCircleFill20Icon } from "./ui/icons/arrowupcirclefill20";
 import { useUpdateUserRoleMutation } from "@/api/users";
 import { toast } from "sonner";
+import Chevron16Icon from "./ui/icons/chevron16";
+import { useNavigate } from "@/hooks/use-navigate";
+import Invites30FilledIcon from "./ui/icons/invites30";
 
 interface OrganizationProfileProps {
   organization: Organization;
@@ -100,6 +103,7 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
   const initData = useInitData();
   const haptic = useHapticFeedback();
   const popup = usePopup();
+  const navigate = useNavigate();
 
   const currentUser = organization.members!.find(
     (member) => member.id === initData?.user?.id,
@@ -268,65 +272,83 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
         </Section>
       )}
       {!isEditing && organization.members && (
-        <Section header="Сотрудники">
-          <OrganizationInviteModal orgId={organization.id} />
-          {organization.members.map((member) => (
-            <DropdownMenu key={`member-${member.id}`}>
+        <>
+          <Section header="Сотрудники">
+            {currentUser.role !== "member" && (
+              <OrganizationInviteModal
+                orgId={organization.id}
+                currentUser={currentUser}
+              />
+            )}
+            {organization.members.map((member) => (
+              <DropdownMenu key={`member-${member.id}`}>
+                <Cell
+                  before={<Avatar src={member.avatar} size={48} />}
+                  description={getRole(member.role)}
+                  hovered={false}
+                  after={
+                    member.id === currentUser.id ? (
+                      <span className="text-tg-hint">Вы</span>
+                    ) : currentUser.role == "admin" ? (
+                      <DropdownMenuTrigger
+                        className="focus:ring-0 focus:outline-none"
+                        onClick={() => haptic.impactOccurred("light")}
+                      >
+                        <Tappable>
+                          <Ellipsis24Icon className="text-tg-hint" />
+                        </Tappable>
+                      </DropdownMenuTrigger>
+                    ) : null
+                  }
+                >
+                  {member.firstName} {member.lastName}
+                </Cell>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    onClick={handlePromoteClick(member)}
+                    className="cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 pl-1">
+                      <ArrowUpCircleFill20Icon />
+                      Повысить
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleDemoteClick(member)}
+                    className="cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 pl-1">
+                      <ArrowUpCircleFill20Icon className="rotate-180" />
+                      Понизить
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleDeleteClick(member)}
+                    className="cursor-pointer text-tg-destructive"
+                  >
+                    <div className="flex items-center gap-2 pl-1">
+                      <Bin24Icon />
+                      Удалить
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ))}
+          </Section>
+          {currentUser.role !== "member" && (
+            <Section>
               <Cell
-                before={<Avatar src={member.avatar} size={48} />}
-                description={getRole(member.role)}
-                hovered={false}
-                after={
-                  member.id === currentUser.id ? (
-                    <span className="text-tg-hint">Вы</span>
-                  ) : currentUser.role == "admin" ? (
-                    <DropdownMenuTrigger
-                      className="focus:ring-0 focus:outline-none"
-                      onClick={() => haptic.impactOccurred("light")}
-                    >
-                      <Tappable>
-                        <Ellipsis24Icon className="text-tg-hint" />
-                      </Tappable>
-                    </DropdownMenuTrigger>
-                  ) : null
-                }
+                onClick={() => navigate(`/orgs/${organization.id}/invitations`)}
+                before={<Invites30FilledIcon />}
+                after={<Chevron16Icon />}
               >
-                {member.firstName} {member.lastName}
+                Приглашения
               </Cell>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onClick={handlePromoteClick(member)}
-                  className="cursor-pointer"
-                >
-                  <div className="flex items-center gap-3 pl-1">
-                    <ArrowUpCircleFill20Icon />
-                    Повысить
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleDemoteClick(member)}
-                  className="cursor-pointer"
-                >
-                  <div className="flex items-center gap-3 pl-1">
-                    <ArrowUpCircleFill20Icon className="rotate-180" />
-                    Понизить
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleDeleteClick(member)}
-                  className="cursor-pointer text-tg-destructive"
-                >
-                  <div className="flex items-center gap-2 pl-1">
-                    <Bin24Icon />
-                    Удалить
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ))}
-        </Section>
+            </Section>
+          )}
+        </>
       )}
     </List>
   );
