@@ -218,3 +218,23 @@ export const useRegisterMutation = (id: number) =>
       return response.data;
     },
   });
+
+export const useGetCheckinDataQuery = (
+  eventId: string,
+  initDataRaw: string,
+) => {
+  return useQuery({
+    queryKey: ["checkin", eventId, initDataRaw],
+    queryFn: async () => {
+      const response = await api.get<{
+        id: number;
+        form: Record<string, string>;
+        created_at: Date;
+        event_id: number;
+        user_id: number;
+        check_in_date: Date | null;
+      }>(`/events/${eventId}/checkin/${initDataRaw}`);
+      return response.data;
+    },
+  });
+};

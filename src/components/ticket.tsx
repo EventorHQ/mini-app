@@ -8,6 +8,7 @@ import QRCode from "react-qr-code";
 const ANIMATION_DURATION_MS = 500;
 
 type TicketEvent = {
+  id: string;
   title: string;
   date: Date;
   location: string;
@@ -121,6 +122,8 @@ function TicketContent({
     }
   }, [isOpen]);
 
+  const value = initDataRaw ? `${initDataRaw}&event_id=${event?.id}` : null;
+
   return (
     <div className="h-screen w-screen pt-12 bg-transparent">
       <div
@@ -146,7 +149,7 @@ function TicketContent({
               <Caption>{event?.location}</Caption>
             </div>
             <div className="pt-20">
-              {initDataRaw && <QRCode value={initDataRaw} size={200} />}
+              {value && <QRCode value={value} size={200} />}
             </div>
             <Button
               onClick={onClose}

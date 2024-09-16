@@ -23,6 +23,7 @@ export default function EventBanner({ event }: { event: ReadEvent }) {
           before={<QR24Icon />}
           onClick={() =>
             ticket({
+              id: `${event.event_id}`,
               title: event.title,
               date: new Date(event.start_date),
               location: event.location,

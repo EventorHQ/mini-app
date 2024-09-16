@@ -1,6 +1,5 @@
 import {
   EventAdministration,
-  useCheckinMutation,
   useDeleteEventMutation,
   useGetEventAdministrationQuery,
 } from "@/api/events";
@@ -93,7 +92,6 @@ export default function EventDetailsPage() {
   const params = useParams<{ id: string }>();
   const bb = useBackButton();
   const { data, isLoading } = useGetEventAdministrationQuery(+params.id);
-  const { mutateAsync } = useCheckinMutation(+params.id);
 
   useEffect(() => {
     const handleClick = () => {
@@ -114,12 +112,14 @@ export default function EventDetailsPage() {
           .open({
             text: "Просканируйте QR-код на билете участника",
           })
-          .then((initDataRaw) => {
-            if (!initDataRaw) {
+          .then((ticketValue) => {
+            if (!ticketValue) {
               return;
             }
 
-            mutateAsync(initDataRaw).then((res) => alert(JSON.stringify(res)));
+            navigate(`/events/${params.id}/checkin`, {
+              state: { initDataRaw: ticketValue },
+            });
           });
       } else if (popup.supports("open")) {
         popup.open({

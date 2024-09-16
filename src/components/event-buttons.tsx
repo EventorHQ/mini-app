@@ -21,6 +21,7 @@ const ActionButton: FC<EventButtonsProps> = ({ event }) => {
   if (event.role === "visitor") {
     const handleClick = () => {
       ticket({
+        id: `${event.id}`,
         title: event.title,
         date: new Date(event.start_date),
         location: event.location,
