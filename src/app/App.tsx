@@ -42,6 +42,9 @@ export const App: FC = () => {
   }, [themeParams]);
 
   useEffect(() => {
+    if (viewport) {
+      document.body.style.height = `${viewport.height * 1.5}px`;
+    }
     return viewport && bindViewportCSSVars(viewport);
   }, [viewport]);
 
