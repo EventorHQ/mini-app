@@ -12,6 +12,8 @@
 
   #root {
     padding-bottom: var(--safe-area-bottom);
+    height: 100%;
+    overflow-y: scroll;
   }
 
   body {
