@@ -65,6 +65,40 @@
     line-height: 22px;
     letter-spacing: -0.31px;
   }
+
+  .tg-title3 {
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.45px;
+  }
+
+  .datepicker-content:before,
+  .datepicker-content:after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: calc(50% - 16px);
+  }
+
+  .datepicker-content:before {
+    top: -0.5px;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--tg-theme-section-bg-color) 40%, transparent),
+      color-mix(in srgb, var(--tg-theme-section-bg-color) 90%, transparent)
+    );
+  }
+  .datepicker-content:after {
+    bottom: -0.5px;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--tg-theme-section-bg-color) 40%, transparent),
+      color-mix(in srgb, var(--tg-theme-section-bg-color) 90%, transparent)
+    );
+  }
 }
 
 .checkmark {

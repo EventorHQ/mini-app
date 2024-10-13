@@ -24,6 +24,7 @@ import { useNavigate } from "@/hooks/use-navigate";
 import FormFields from "../../create/form-fields";
 import { FormField } from "@/types";
 import { toast } from "sonner";
+import Loading from "../loading";
 
 type FormData = {
   title: string;
@@ -93,7 +94,7 @@ const Inner: FC<{ eventData: DetailedEvent }> = ({ eventData }) => {
         location: formData.location,
         org_id: formData.org_id!,
         start_date: formData.start_date || new Date(),
-        end_date: formData.end_date,
+        end_date: isMultipleDays ? formData.end_date : undefined,
         cover: formData.cover,
         form: formData.form,
       })
@@ -253,7 +254,7 @@ const Inner: FC<{ eventData: DetailedEvent }> = ({ eventData }) => {
 const Content: FC<{ eventId: string }> = ({ eventId }) => {
   const { data: eventData, isLoading } = useGetEventQuery(+eventId);
   if (isLoading || !eventData) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return <Inner eventData={eventData} />;
@@ -263,7 +264,7 @@ export default function EditEventPage() {
   const eventId =
     history.state && "event" in history.state ? history.state.event : null;
   if (!eventId) {
-    return "penis";
+    return null;
   }
 
   return <Content eventId={eventId} />;

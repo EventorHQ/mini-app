@@ -15,6 +15,7 @@ import { type FC, useEffect } from "react";
 import Router from "./routing/router";
 import { IOS_PLATFORMS } from "@/config/config";
 import { Ticket } from "@/components/ticket";
+import { bindColor } from "@/lib/bind-color";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +47,7 @@ export const App: FC = () => {
 
   useEffect(() => {
     miniApp.setHeaderColor("secondary_bg_color");
+    bindColor("--tg-theme-bg-tertiary", miniApp.isDark ? "#2a2a2a" : "#f4f4f7");
     return bindMiniAppCSSVars(miniApp, themeParams);
   }, [miniApp, themeParams]);
 

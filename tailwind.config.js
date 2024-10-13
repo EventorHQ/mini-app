@@ -11,6 +11,7 @@ export default {
           bg: {
             DEFAULT: "var(--tg-theme-bg-color, white)",
             second: "var(--tg-theme-secondary-bg-color, white)",
+            tertiary: "var(--tg-theme-bg-tertiary)",
             section: "var(--tg-theme-section-bg-color, white)",
             opaque: "#38383885",
           },

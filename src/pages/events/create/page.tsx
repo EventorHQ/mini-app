@@ -87,7 +87,7 @@ export default function CreateEventPage() {
         location: formData.location,
         org_id: formData.org_id!,
         start_date: formData.start_date || new Date(),
-        end_date: formData.end_date,
+        end_date: isMultipleDays ? formData.end_date : undefined,
         cover: formData.cover!,
         form: formData.form,
       })
@@ -109,20 +109,6 @@ export default function CreateEventPage() {
         .finally(() => {
           mb.hideLoader();
         });
-
-      // const result = await createEvent({
-      //   title: formData.title,
-      //   description: formData.description,
-      //   location: formData.location,
-      //   org_id: formData.org_id!,
-      //   start_date: formData.start_date || new Date(),
-      //   end_date: formData.end_date,
-      //   cover: formData.cover!,
-      //   form: formData.form,
-      // });
-      // mb.hideLoader();
-      // navigate(`/events/${result.id}`);
-      // toast.success("Мероприятие создано");
     };
 
     mb.on("click", handleClick);
