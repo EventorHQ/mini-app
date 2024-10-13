@@ -30,6 +30,13 @@ const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
   }, []);
 
   useEffect(() => {
+    if (Object.keys(formData).length === 0) {
+      register(formData).then(() => {
+        navigate(`/events/${event.id}`);
+      });
+      return;
+    }
+
     const handleClick = () => {
       register(formData).then(() => {
         navigate(`/events/${event.id}`);
