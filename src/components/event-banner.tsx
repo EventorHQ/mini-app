@@ -5,9 +5,11 @@ import QR24Icon from "./ui/icons/qr24";
 import { ticket } from "./ticket";
 import { useNavigate } from "@/hooks/use-navigate";
 import { Guard24Icon } from "./ui/icons/guard24";
+import { useQRScan } from "@/hooks/use-qr-scanner";
 
 export default function EventBanner({ event }: { event: ReadEvent }) {
   const navigate = useNavigate();
+  const handleQRScan = useQRScan(event.event_id);
 
   return (
     <Banner
@@ -33,13 +35,18 @@ export default function EventBanner({ event }: { event: ReadEvent }) {
           Билет
         </Button>
       ) : (
-        <Button
-          size="s"
-          before={<Guard24Icon />}
-          onClick={() => navigate(`/events/${event.event_id}/details`)}
-        >
-          Управление
-        </Button>
+        <div className="flex gap-2 items-center">
+          <Button
+            size="s"
+            before={<Guard24Icon />}
+            onClick={() => navigate(`/events/${event.event_id}/details`)}
+          >
+            Управление
+          </Button>
+          <Button size="s" before={<QR24Icon />} onClick={handleQRScan}>
+            Сканировать
+          </Button>
+        </div>
       )}
     </Banner>
   );

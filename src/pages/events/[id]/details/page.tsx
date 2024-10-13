@@ -7,11 +7,7 @@ import Chevron16Icon from "@/components/ui/icons/chevron16";
 import { Edit28Icon } from "@/components/ui/icons/edit28";
 import { useNavigate } from "@/hooks/use-navigate";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import {
-  useBackButton,
-  usePopup,
-  useQRScanner,
-} from "@telegram-apps/sdk-react";
+import { useBackButton, usePopup } from "@telegram-apps/sdk-react";
 import {
   ButtonCell,
   Cell,
@@ -25,6 +21,7 @@ import { isBefore } from "date-fns";
 import { toast } from "sonner";
 import { Cancel24Icon } from "@/components/ui/icons/cancel24";
 import Loading from "./loading";
+import { useQRScan } from "@/hooks/use-qr-scanner";
 
 const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
   const { mutateAsync: deleteEvent } = useDeleteEventMutation(event.id);
@@ -87,12 +84,11 @@ const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
 
 export default function EventDetailsPage() {
   const { setParams, setIsVisible } = useTabbarActions();
-  const scanner = useQRScanner();
-  const popup = usePopup();
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const bb = useBackButton();
   const { data, isLoading, error } = useGetEventAdministrationQuery(+params.id);
+  const handleQRScan = useQRScan(params.id);
 
   useEffect(() => {
     const handleClick = () => {
@@ -107,39 +103,14 @@ export default function EventDetailsPage() {
   }, []);
 
   useEffect(() => {
-    const handleClick = () => {
-      if (scanner.supports("open")) {
-        scanner
-          .open({
-            text: "Просканируйте QR-код на билете участника",
-          })
-          .then((ticketValue) => {
-            if (!ticketValue) {
-              return;
-            }
-
-            navigate(`/events/${params.id}/checkin`, {
-              state: { initDataRaw: ticketValue },
-            });
-          });
-      } else if (popup.supports("open")) {
-        popup.open({
-          title: "Ошибка",
-          message: "Ваша версия клиента не поддерживает сканер QR-кодов",
-        });
-      } else {
-        alert("Ваша версия клиента не поддерживает сканер QR-кодов");
-      }
-    };
-
     setIsVisible(false);
 
     setParams({
       isVisible: true,
       text: "Сканировать QR",
-      onClick: handleClick,
+      onClick: handleQRScan,
     });
-  }, [scanner, popup]);
+  }, []);
 
   const handleCheckedInClick = () => {
     if (
