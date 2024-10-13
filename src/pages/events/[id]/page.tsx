@@ -14,13 +14,14 @@ import { useGetEventQuery } from "@/api/events";
 import { useDateFormat } from "@/hooks/use-date-format";
 import Check16Icon from "@/components/ui/icons/check16";
 import EventButtons from "@/components/event-buttons";
+import Loading from "./loading";
 
 export default function EventPage() {
   const { id } = useParams<{ id: string }>();
   const { setIsVisible, setParams } = useTabbarActions();
   const bb = useBackButton();
   const navigate = useNavigate();
-  const { data: event, isLoading } = useGetEventQuery(+id);
+  const { data: event, isLoading, error } = useGetEventQuery(+id);
   const format = useDateFormat({
     month: "long",
     day: "numeric",
@@ -52,7 +53,11 @@ export default function EventPage() {
   }, []);
 
   if (isLoading || !event) {
-    return <div>Loading...</div>;
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>{JSON.stringify(error)}</div>;
   }
 
   return (

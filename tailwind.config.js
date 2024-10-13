@@ -32,6 +32,8 @@ export default {
           subtitle: "var(--tg-theme-subtitle-text-color)",
           link: "var(--tg-theme-link-color)",
           destructive: "var(--tg-theme-destructive-text-color)",
+          separator:
+            "color-mix(in srgb,var(--tg-theme-text-color) 15%,transparent)",
         },
       },
       keyframes: {

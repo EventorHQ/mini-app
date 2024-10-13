@@ -7,10 +7,19 @@ import { List, Section, Placeholder } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
 import EventBanner from "@/components/event-banner";
+import { Loading } from "./loading";
 
 export default function EventsPage() {
-  const { data: orgs, isLoading: isOrgsLoading } = useGetOrgsQuery();
-  const { data: events, isLoading: isEventsLoading } = useGetEventsQuery();
+  const {
+    data: orgs,
+    isLoading: isOrgsLoading,
+    error: orgsError,
+  } = useGetOrgsQuery();
+  const {
+    data: events,
+    isLoading: isEventsLoading,
+    error: eventsError,
+  } = useGetEventsQuery();
   const navigate = useNavigate();
   const bb = useBackButton();
   const { setParams, setIsVisible } = useTabbarActions();
@@ -37,7 +46,15 @@ export default function EventsPage() {
   }, [orgs, isOrgsLoading]);
 
   if (isEventsLoading || !events) {
-    return <div>Loading...</div>;
+    return <Loading />;
+  }
+
+  if (eventsError) {
+    return <div>{JSON.stringify(eventsError)}</div>;
+  }
+
+  if (orgsError) {
+    return <div>{JSON.stringify(orgsError)}</div>;
   }
 
   if (events.length === 0) {
@@ -63,7 +80,7 @@ export default function EventsPage() {
     <List>
       <EventBanner event={events[0]} />
       {events.length > 0 ? (
-        <Section header="Мои мероприятия" className="mb-28">
+        <Section header="Мои мероприятия" className="mb-20">
           {events.map((event) => (
             <EventCell
               key={event.event_id}

@@ -5,9 +5,10 @@ import { useTabbarActions } from "@/hooks/use-tabbar-actions";
 import { List, Placeholder, Section } from "@telegram-apps/telegram-ui";
 import { useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
+import { Loading } from "./loading";
 
 export default function OrganizationsPage() {
-  const { data, isLoading } = useGetOrgsQuery();
+  const { data, isLoading, error } = useGetOrgsQuery();
   const { isVisible } = useTabbar();
   const { setParams, setIsVisible } = useTabbarActions();
   const navigate = useNavigate();
@@ -28,7 +29,11 @@ export default function OrganizationsPage() {
   }, []);
 
   if (isLoading) {
-    return <Placeholder description="Загрузка..." />;
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>{JSON.stringify(error)}</div>;
   }
 
   const handleItemClick = (id: number) => () => {

@@ -40,91 +40,91 @@ export default function AppRouter() {
       <Setup />
       <main className="pb-14">
         <Route path="/">
-          <Suspense fallback={<div>Loading page...</div>}>
+          <Suspense fallback={null}>
             <EventsPage />
           </Suspense>
         </Route>
         <Switch>
           <Route path="/events">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventsPage />
             </Suspense>
           </Route>
           <Route path="/events/create">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <CreateEventPage />
             </Suspense>
           </Route>
           <Route path="/events/:id">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/details">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventDetailsPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/register">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventRegisterPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/edit">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EditEventPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/checkin">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventCheckinPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/people/checkin">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventCheckedInPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/people/visitors">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventVisitorsPage />
             </Suspense>
           </Route>
           <Route path="/events/:id/people/feedback">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <EventFeedbackPage />
             </Suspense>
           </Route>
         </Switch>
         <Route path="/orgs">
-          <Suspense fallback={<div>Loading page...</div>}>
+          <Suspense fallback={null}>
             <OrgsPage />
           </Suspense>
         </Route>
         <Switch>
           <Route path="/orgs/create">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <CreateOrgPage />
             </Suspense>
           </Route>
           <Route path="/orgs/:id">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <OrgPage />
             </Suspense>
           </Route>
           <Route path="/orgs/:id/invitations">
-            <Suspense fallback={<div>Loading page...</div>}>
+            <Suspense fallback={null}>
               <OrgInvitationsPage />
             </Suspense>
           </Route>
         </Switch>
         <Route path="/profile">
-          <Suspense fallback={<div>Loading page...</div>}>
+          <Suspense fallback={null}>
             <ProfilePage />
           </Suspense>
         </Route>
         <Route path="/invitations/:id">
-          <Suspense fallback={<div>Loading page...</div>}>
+          <Suspense fallback={null}>
             <InvitationPage />
           </Suspense>
         </Route>

@@ -8,10 +8,11 @@ import { useBackButton } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
 import { useNavigate } from "@/hooks/use-navigate";
 import { useParams } from "wouter";
+import { Loading } from "./loading";
 
 export default function OrganizationPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: organization, isLoading } = useGetOrganizationQuery(+id);
+  const { data: organization, isLoading, error } = useGetOrganizationQuery(+id);
   const bb = useBackButton();
   const navigate = useNavigate();
   const { setParams } = useTabbarActions();
@@ -39,7 +40,11 @@ export default function OrganizationPage() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>{JSON.stringify(error)}</div>;
   }
 
   if (!organization) {

@@ -24,6 +24,7 @@ import { useParams } from "wouter";
 import { isBefore } from "date-fns";
 import { toast } from "sonner";
 import { Cancel24Icon } from "@/components/ui/icons/cancel24";
+import Loading from "./loading";
 
 const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
   const { mutateAsync: deleteEvent } = useDeleteEventMutation(event.id);
@@ -91,7 +92,7 @@ export default function EventDetailsPage() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const bb = useBackButton();
-  const { data, isLoading } = useGetEventAdministrationQuery(+params.id);
+  const { data, isLoading, error } = useGetEventAdministrationQuery(+params.id);
 
   useEffect(() => {
     const handleClick = () => {
@@ -162,7 +163,11 @@ export default function EventDetailsPage() {
   };
 
   if (!data || isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>{JSON.stringify(error)}</div>;
   }
 
   return (

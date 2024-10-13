@@ -225,8 +225,8 @@ export const OrganizationProfileMember: FC<OrganizationProfileProps> = ({
   };
 
   return (
-    <List>
-      <div className="fixed top-4 left-0 right-0 px-4 flex justify-between">
+    <List className="relative">
+      <div className="absolute top-4 left-0 right-0 px-4 flex justify-between">
         <Button
           size="s"
           mode="plain"
