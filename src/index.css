@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --safe-area-bottom: max(
+      100vh - var(--tg-viewport-stable-height, 100vh),
+      16px
+    );
+  }
+
+  #root {
+    padding-bottom: var(--safe-area-bottom);
+  }
+
   body {
     background: var(--tg-theme-secondary-bg-color, black);
     color: var(--tg-theme-text-color, white);
