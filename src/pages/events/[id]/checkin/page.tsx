@@ -41,7 +41,7 @@ const Content = ({
   useEffect(() => {
     if (data) {
       const handleClick = () => {
-        mutateAsync(initDataRaw).then(() => {
+        mutateAsync({ initDataRaw }).then(() => {
           haptic.notificationOccurred("success");
           navigate(`/events/${eventId}/details`);
           toast.success("Check-in успешно проведен");

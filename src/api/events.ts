@@ -196,14 +196,15 @@ export const useDeleteEventMutation = (id: number) => {
   });
 };
 
-export const useCheckinMutation = (id: number) => {
+export const useCheckinMutation = (id: number | string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (initDataRaw: string) => {
-      const response = await api.post(`/events/${id}/checkin`, {
-        user: initDataRaw,
-      });
+    mutationFn: async (arg: { initDataRaw?: string; userId?: number }) => {
+      const payload = arg.initDataRaw
+        ? { user: arg.initDataRaw }
+        : { userId: arg.userId };
+      const response = await api.post(`/events/${id}/checkin`, payload);
 
       return response.data;
     },

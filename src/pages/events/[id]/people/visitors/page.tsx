@@ -1,10 +1,23 @@
-import { useGetEventAdministrationQuery, Visitor } from "@/api/events";
+import {
+  useCheckinMutation,
+  useGetEventAdministrationQuery,
+  Visitor,
+} from "@/api/events";
+import { Forward24Icon } from "@/components/ui/icons/forward24";
 import Search24Icon from "@/components/ui/icons/search24";
 import { useNavigate } from "@/hooks/use-navigate";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
-import { useBackButton } from "@telegram-apps/sdk-react";
-import { Avatar, Cell, Input, List, Section } from "@telegram-apps/telegram-ui";
+import { useBackButton, useHapticFeedback } from "@telegram-apps/sdk-react";
+import {
+  Avatar,
+  Cell,
+  IconButton,
+  Input,
+  List,
+  Section,
+} from "@telegram-apps/telegram-ui";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useParams } from "wouter";
 
 const Loading = () => (
@@ -24,6 +37,27 @@ const Loading = () => (
     <Section.Footer centered>Загрузка...</Section.Footer>
   </List>
 );
+
+const ManualCheckinButton = ({ visitor }: { visitor: Visitor }) => {
+  const { id } = useParams<{ id: string }>();
+  const { mutateAsync } = useCheckinMutation(id);
+  const haptic = useHapticFeedback();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    mutateAsync({ userId: visitor.id }).then(() => {
+      haptic.notificationOccurred("success");
+      navigate(`/events/${id}/details`);
+      toast.success("Check-in успешно проведен");
+    });
+  };
+
+  return (
+    <IconButton size="s" mode="bezeled" onClick={handleClick}>
+      <Forward24Icon />
+    </IconButton>
+  );
+};
 
 const Visitors = ({
   visitors,
@@ -57,6 +91,7 @@ const Visitors = ({
           <Cell
             key={`visitor-${visitor.id}`}
             before={<Avatar src={visitor.photo_img} size={48} />}
+            after={<ManualCheckinButton visitor={visitor} />}
             description={
               visitor.username ? (
                 `@${visitor.username}`

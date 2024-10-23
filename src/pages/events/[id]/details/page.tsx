@@ -22,13 +22,19 @@ import { toast } from "sonner";
 import { Cancel24Icon } from "@/components/ui/icons/cancel24";
 import Loading from "./loading";
 import { useQRScan } from "@/hooks/use-qr-scanner";
+import { ignoreTimezone } from "@/lib/utils";
 
 const EditButtons: FC<{ event: EventAdministration }> = ({ event }) => {
   const { mutateAsync: deleteEvent } = useDeleteEventMutation(event.id);
   const navigate = useNavigate();
   const popup = usePopup();
 
-  if (isBefore(new Date(event.start_date), new Date())) {
+  if (
+    isBefore(
+      ignoreTimezone(new Date(event.start_date)),
+      ignoreTimezone(new Date()),
+    )
+  ) {
     return null;
   }
 
@@ -118,7 +124,7 @@ export default function EventDetailsPage() {
       data.checked_in_visitors &&
       data.checked_in_visitors.length > 0
     ) {
-      navigate(`/events/${params.id}/checkin`);
+      navigate(`/events/${params.id}/people/checkin`);
     }
   };
 
