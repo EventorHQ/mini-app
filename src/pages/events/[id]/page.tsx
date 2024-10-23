@@ -83,7 +83,7 @@ export default function EventPage() {
         </div>
         <EventButtons event={event} />
         <Section header="О мероприятии">
-          {event.start_date === event.end_date ? (
+          {event.start_date === event.end_date || !event.end_date ? (
             <Cell subhead="Дата проведения">
               {format(new Date(event.start_date))}
             </Cell>
@@ -92,9 +92,11 @@ export default function EventPage() {
               <Cell subhead="Дата начала">
                 {format(new Date(event.start_date))}
               </Cell>
-              <Cell subhead="Дата окончания">
-                {format(new Date(event.end_date))}
-              </Cell>
+              {
+                <Cell subhead="Дата окончания">
+                  {format(new Date(event.end_date))}
+                </Cell>
+              }
             </>
           )}
           <Cell subhead="Место проведения" multiline>

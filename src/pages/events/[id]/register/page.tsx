@@ -16,10 +16,11 @@ const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
   const { mutateAsync: register } = useRegisterMutation(event.id);
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Record<string, string | undefined>>(
-    event.form.fields.reduce((acc, field) => {
-      acc[field.label] = undefined;
-      return acc;
-    }, {} as Record<string, string | undefined>),
+    () =>
+      event.form.fields.reduce((acc, field) => {
+        acc[field.label] = undefined;
+        return acc;
+      }, {} as Record<string, string | undefined>),
   );
   const isDisabled = event.form.fields.some(
     (field) => field.required && !formData[field.label],
@@ -30,13 +31,14 @@ const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(formData).length === 0) {
+    if (Object.keys(event.form).length === 0) {
       register(formData).then(() => {
         navigate(`/events/${event.id}`);
       });
-      return;
     }
+  }, []);
 
+  useEffect(() => {
     const handleClick = () => {
       register(formData).then(() => {
         navigate(`/events/${event.id}`);
@@ -49,7 +51,7 @@ const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
       onClick: handleClick,
       disabled: isDisabled,
     });
-  }, [formData]);
+  }, [formData, event.form]);
 
   return (
     <List>

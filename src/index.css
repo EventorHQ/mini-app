@@ -11,7 +11,7 @@
   }
 
   #root {
-    padding-bottom: var(--safe-area-bottom);
+    /* padding-bottom: var(--safe-area-bottom); */
     height: var(--tg-viewport-stable-height, 100vh);
     overflow-y: scroll;
   }

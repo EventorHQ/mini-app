@@ -39,7 +39,7 @@ type FormData = {
 
 const Inner: FC<{ eventData: DetailedEvent }> = ({ eventData }) => {
   const [isMultipleDays, setIsMultipleDays] = useState(
-    eventData.start_date !== eventData.end_date,
+    !!eventData.end_date && eventData.start_date !== eventData.end_date,
   );
   const { data: orgs } = useGetOrgsQuery();
   const { mutateAsync: updateEvent } = useUpdateEventMutation(eventData.id);
@@ -53,7 +53,7 @@ const Inner: FC<{ eventData: DetailedEvent }> = ({ eventData }) => {
     location: eventData.location,
     org_id: `${eventData.org.id}`,
     start_date: new Date(eventData.start_date),
-    end_date: new Date(eventData.end_date),
+    end_date: eventData.end_date ? new Date(eventData.end_date) : undefined,
     cover: undefined,
     form: eventData.form.fields,
   });

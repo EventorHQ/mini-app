@@ -1,5 +1,5 @@
 export const BASE_URL =
-  import.meta.env.VITE_API_URL || "https://tma.internal:3000";
+  import.meta.env.VITE_API_URL || "https://eventor-api.wishyoudie.ru";
 export const APP_URL =
   import.meta.env.VITE_MINI_APP_URL || "https://t.me/eventor_tgbot/local";
 

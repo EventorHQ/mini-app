@@ -1,6 +1,7 @@
 import { FormField } from "@/types";
 import api from "./axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ignoreTimezone } from "@/lib/utils";
 
 type CreateEventData = {
   title: string;
@@ -112,11 +113,17 @@ export const useCreateEventMutation = () => {
       formData.append("location", data.location);
       formData.append("org_id", data.org_id);
       formData.append("cover_img", data.cover);
-      formData.append("start_date", data.start_date.toISOString());
+      formData.append(
+        "start_date",
+        ignoreTimezone(data.start_date).toISOString(),
+      );
       formData.append("form", JSON.stringify(data.form));
 
       if (data.end_date) {
-        formData.append("end_date", data.end_date.toISOString());
+        formData.append(
+          "end_date",
+          ignoreTimezone(data.end_date).toISOString(),
+        );
       }
 
       const response = await api.post<{

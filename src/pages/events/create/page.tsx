@@ -122,7 +122,7 @@ export default function CreateEventPage() {
     return () => {
       mb.off("click", handleClick);
     };
-  }, [formData]);
+  }, [formData, isMultipleDays]);
 
   useEffect(() => {
     const handleBackButtonClick = () => {

@@ -26,3 +26,7 @@ export function getAcronym(user: User) {
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function ignoreTimezone(date: Date) {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+}

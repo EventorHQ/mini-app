@@ -44,7 +44,7 @@ export default function EventBanner({ event }: { event: ReadEvent }) {
             Управление
           </Button>
           <Button size="s" before={<QR24Icon />} onClick={handleQRScan}>
-            Сканировать
+            Скан QR
           </Button>
         </div>
       )}

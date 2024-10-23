@@ -216,7 +216,7 @@ const Picker = ({
     };
 
     api.on("select", handleSelect);
-  }, [api, setValue]);
+  }, [api]);
 
   return (
     <PickerItem
