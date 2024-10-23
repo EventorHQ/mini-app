@@ -7,9 +7,11 @@ import FormField from "@/components/form-field";
 import { useNavigate } from "@/hooks/use-navigate";
 import { useTabbarActions } from "@/hooks/use-tabbar-actions";
 import { useBackButton } from "@telegram-apps/sdk-react";
-import { List, Section, Title } from "@telegram-apps/telegram-ui";
+import { List, Placeholder, Section, Title } from "@telegram-apps/telegram-ui";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "wouter";
+import { Player } from "@lottiefiles/react-lottie-player";
+import { Lottie } from "@/config/lotties";
 
 const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
   const { setIsVisible, setParams } = useTabbarActions();
@@ -28,14 +30,6 @@ const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
 
   useEffect(() => {
     setIsVisible(false);
-  }, []);
-
-  useEffect(() => {
-    if (Object.keys(event.form).length === 0) {
-      register(formData).then(() => {
-        navigate(`/events/${event.id}`);
-      });
-    }
   }, []);
 
   useEffect(() => {
@@ -58,18 +52,26 @@ const Content: FC<{ event: DetailedEvent }> = ({ event }) => {
       <Title level="1" weight="1">
         Регистрация
       </Title>
-      <Section.Footer>Заполните форму</Section.Footer>
-      {event.form.fields.map((field) => (
-        <Section key={field.label} header={field.label}>
-          <FormField
-            type={field.type}
-            value={formData[field.label]}
-            onChange={(e) =>
-              setFormData({ ...formData, [field.label]: e.target.value })
-            }
-          />
-        </Section>
-      ))}
+      {event.form.fields.length > 0 ? (
+        <>
+          <Section.Footer>Заполните форму</Section.Footer>
+          {event.form.fields.map((field) => (
+            <Section key={field.label} header={field.label}>
+              <FormField
+                type={field.type}
+                value={formData[field.label]}
+                onChange={(e) =>
+                  setFormData({ ...formData, [field.label]: e.target.value })
+                }
+              />
+            </Section>
+          ))}
+        </>
+      ) : (
+        <Placeholder description="Формы регистрации нет! Смело жмите кнопку">
+          <Player src={Lottie.APPROVE} autoplay loop />
+        </Placeholder>
+      )}
     </List>
   );
 };

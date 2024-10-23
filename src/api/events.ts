@@ -215,8 +215,14 @@ export const useCheckinMutation = (id: number) => {
   });
 };
 
-export const useRegisterMutation = (id: number) =>
-  useMutation({
+export const useRegisterMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["events", id],
+      });
+    },
     mutationFn: async (form: Record<string, string | undefined>) => {
       const response = await api.post(`/events/${id}/register`, {
         form: JSON.stringify(form),
@@ -225,6 +231,7 @@ export const useRegisterMutation = (id: number) =>
       return response.data;
     },
   });
+};
 
 export const useGetCheckinDataQuery = (
   eventId: string,
